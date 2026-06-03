@@ -1,0 +1,52 @@
+<section class="relative pt-24 pb-10 lg:pt-32 lg:pb-16 overflow-hidden bg-slate-50">
+  
+  <!-- CAPA 0 (Más profunda): La Imagen de Fondo fusionada -->
+  <div class="absolute inset-y-0 right-0 w-[90%] sm:w-[80%] md:w-[70%] lg:w-[50%] xl:w-[45%] h-full z-0 pointer-events-none">
+    <img src="img/imagen_hero.png" 
+         alt="Fondo AulaComparte" 
+         class="w-full h-full object-cover object-top lg:object-[right_top] transform origin-top-right scale-105 hover:scale-110 transition duration-1000 opacity-90"
+         style="-webkit-mask-image: linear-gradient(to left, black 50%, transparent 95%); mask-image: linear-gradient(to left, black 50%, transparent 95%);" />
+  </div>
+
+  <!-- CAPA 1: Luces y Gradientes de color para que no se vea plano -->
+  <div class="absolute inset-y-0 w-full h-full z-0 pointer-events-none">
+    <div class="absolute top-0 right-0 w-[800px] h-[800px] bg-main-600/10 rounded-full blur-[100px] mix-blend-multiply"></div>
+    <div class="absolute bottom-0 left-0 w-[600px] h-[600px] bg-cyan-600/5 rounded-full blur-[100px] mix-blend-multiply"></div>
+  </div>
+
+  <!-- CAPA 2 (Frente): Contenido, Textos y Botones -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    
+    <!-- Contenedor del texto -->
+    <div class="text-left max-w-2xl relative">
+
+      <!-- Título Principal -->
+      <h1 class="text-5xl md:text-6xl lg:text-7xl font-extrabold text-gray-900 tracking-tight leading-tight mb-6 drop-shadow-sm">
+        Comparte <br class="hidden md:block"/>
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-main-700 to-main-500">recursos educativos</span>
+      </h1>
+      
+      <!-- Subtítulo -->
+      <p class="text-lg md:text-xl text-gray-700 mb-6 max-w-2xl leading-relaxed font-medium">
+        Ayudamos a estudiantes a acceder a materiales de estudio y aprender juntos
+      </p>
+
+      <!-- Botones de Acción -->
+      <div class="flex flex-col sm:flex-row items-center justify-start gap-4 mb-2">
+        <button class="w-full sm:w-auto px-8 py-4 bg-main-600 text-white border border-transparent rounded-full font-bold text-lg shadow-xl shadow-main-600/30 hover:shadow-main-600/50 hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-2 group">
+          Explorar Recursos
+          <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </button>
+        <button class="w-full sm:w-auto px-8 py-4 bg-white/80 backdrop-blur-sm text-gray-800 border border-gray-200 rounded-full font-bold text-lg hover:bg-white hover:border-gray-300 hover:text-main-700 hover:-translate-y-1 shadow-sm transition-all duration-300 flex items-center justify-center gap-2 group">
+          <svg class="w-5 h-5 text-main-600 group-hover:scale-110 group-hover:rotate-90 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+          </svg>
+          Publicar material
+        </button>
+      </div>
+
+    </div>
+  </div>
+</section>
