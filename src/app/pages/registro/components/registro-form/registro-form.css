@@ -1,0 +1,12 @@
+:host {
+  display: block;
+}
+
+.role-toggle:has(#rol-maestro:checked) .role-toggle__indicator {
+  transform: translateX(100%);
+}
+
+.terms-checkbox:checked + span .terms-check {
+  opacity: 1;
+  transform: scale(1);
+}

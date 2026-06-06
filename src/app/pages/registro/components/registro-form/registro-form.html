@@ -1,0 +1,52 @@
+<form class="rounded-3xl border border-white/80 bg-white/90 p-6 shadow-2xl shadow-main-900/10 backdrop-blur sm:p-8">
+  <div class="space-y-5">
+    <div>
+      <label for="nombre" class="block text-sm font-semibold text-slate-700">Nombre completo</label>
+      <input id="nombre" type="text" class="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3 text-slate-900 outline-none transition focus:border-main-500 focus:ring-4 focus:ring-main-100" placeholder="Ej. Maria Quispe" />
+    </div>
+
+    <div>
+      <label for="correo" class="block text-sm font-semibold text-slate-700">Correo electrónico</label>
+      <input id="correo" type="email" class="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3 text-slate-900 outline-none transition focus:border-main-500 focus:ring-4 focus:ring-main-100" placeholder="correo@ejemplo.com" />
+    </div>
+
+    <div>
+      <label for="password" class="block text-sm font-semibold text-slate-700">Contraseña</label>
+      <input id="password" type="password" class="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3 text-slate-900 outline-none transition focus:border-main-500 focus:ring-4 focus:ring-main-100" placeholder="Mínimo 8 caracteres" />
+    </div>
+
+    <div>
+      <p class="block text-sm font-semibold text-slate-700">Tipo de usuario</p>
+
+      <div class="role-toggle relative mt-2 grid grid-cols-2 rounded-2xl border border-slate-200 bg-slate-100 p-1">
+        <input id="rol-estudiante" class="peer/estudiante sr-only" type="radio" name="rol" value="estudiante" checked />
+        <label for="rol-estudiante" class="relative z-10 flex cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-bold text-slate-800 transition">
+          <img src="/img/student_icon.png" alt="" class="h-5 w-5 object-contain" />
+          <span>Estudiante</span>
+        </label>
+
+        <input id="rol-maestro" class="peer/maestro sr-only" type="radio" name="rol" value="maestro" />
+        <label for="rol-maestro" class="relative z-10 flex cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-bold text-slate-800 transition">
+          <img src="/img/teacher_icon.png" alt="" class="h-5 w-5 object-contain" />
+          <span>Maestro</span>
+        </label>
+
+        <span class="role-toggle__indicator pointer-events-none absolute left-1 top-1 h-[calc(100%-0.5rem)] w-[calc(50%-0.25rem)] rounded-xl bg-white shadow-md shadow-slate-900/10 transition-transform duration-300"></span>
+      </div>
+    </div>
+
+    <label for="terminos" class="group flex cursor-pointer items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50/80 p-4 text-sm text-slate-600 transition hover:border-main-200 hover:bg-main-50/60">
+      <input id="terminos" type="checkbox" class="terms-checkbox peer sr-only" />
+      <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border-2 border-slate-300 bg-white text-white transition group-hover:border-main-400 peer-checked:border-main-600 peer-checked:bg-main-600 peer-focus-visible:ring-4 peer-focus-visible:ring-main-100">
+        <svg class="terms-check h-4 w-4 scale-75 opacity-0 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+        </svg>
+      </span>
+      <span>Acepto los términos y condiciones</span>
+    </label>
+
+    <button type="button" class="w-full rounded-2xl bg-main-600 px-5 py-3 font-bold text-white shadow-lg shadow-main-600/25 transition hover:-translate-y-0.5 hover:bg-main-700 hover:shadow-main-600/35">
+      Crear cuenta
+    </button>
+  </div>
+</form>
