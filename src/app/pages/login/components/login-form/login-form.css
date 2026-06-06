@@ -1,0 +1,8 @@
+:host {
+  display: block;
+}
+
+.remember-checkbox:checked + span .remember-check {
+  opacity: 1;
+  transform: scale(1);
+}

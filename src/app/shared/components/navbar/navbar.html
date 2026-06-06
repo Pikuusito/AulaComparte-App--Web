@@ -12,17 +12,42 @@
     </a>
 
     <!-- Acciones -->
-    <div class="flex items-center gap-2">
-      <button class="hidden md:flex items-center gap-2 px-5 py-2 text-sm font-semibold text-gray-600 bg-transparent rounded-full hover:bg-gray-100 hover:text-main-700 transition-all duration-300">
-        Ingresar
-      </button>
-      <a routerLink="/registro" class="group flex items-center gap-2 px-6 py-2.5 text-sm font-semibold text-white bg-main-600 rounded-full hover:bg-main-700 shadow-lg shadow-main-600/30 hover:shadow-main-600/40 hover:-translate-y-0.5 transition-all duration-300">
-        <span>Comenzar</span>
-        <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-        </svg>
-      </a>
-    </div>
+    @if (!isStudentPanel) {
+      <div class="flex items-center gap-2">
+        <a routerLink="/login" class="hidden md:flex items-center gap-2 px-5 py-2 text-sm font-semibold text-gray-600 bg-transparent rounded-full hover:bg-gray-100 hover:text-main-700 transition-all duration-300">
+          Ingresar
+        </a>
+        <a routerLink="/registro" class="group flex items-center gap-2 px-6 py-2.5 text-sm font-semibold text-white bg-main-600 rounded-full hover:bg-main-700 shadow-lg shadow-main-600/30 hover:shadow-main-600/40 hover:-translate-y-0.5 transition-all duration-300">
+          <span>Comenzar</span>
+          <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </a>
+      </div>
+    } @else {
+      <!-- Menú Usuario (Placeholder para el Panel) -->
+      <div class="flex items-center gap-3">
+        <!-- Botón Publicar (Icono +) -->
+        <button class="flex h-10 w-10 items-center justify-center rounded-full bg-main-600 text-white transition-colors hover:bg-main-700" title="Publicar material">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+          </svg>
+        </button>
+
+        <div class="h-6 w-px bg-slate-200 mx-1"></div>
+
+        <button class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-500 transition-colors hover:bg-slate-200">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+          </svg>
+        </button>
+        <button class="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border border-slate-200 bg-white hover:ring-2 hover:ring-main-200 transition-all">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+          </svg>
+        </button>
+      </div>
+    }
 
   </nav>
 </div>

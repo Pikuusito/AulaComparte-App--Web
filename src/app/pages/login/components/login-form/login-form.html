@@ -1,0 +1,51 @@
+<form (ngSubmit)="onSubmit($event)" class="order-1 rounded-[2rem] border border-white/80 bg-white/90 p-6 shadow-2xl shadow-main-950/10 backdrop-blur-xl sm:p-8 lg:order-2">
+  <div class="mb-8 flex items-start justify-between gap-4">
+    <div>
+      <p class="text-sm font-bold uppercase tracking-[0.28em] text-main-600">Ingresar</p>
+      <h2 class="mt-2 text-3xl font-black text-slate-950">Bienvenido de nuevo</h2>
+    </div>
+  </div>
+
+  <div class="space-y-5">
+    <div>
+      <label for="email" class="block text-sm font-semibold text-slate-700">Correo electrónico</label>
+      <input id="email" name="email" type="email" autocomplete="email" [value]="email()" (input)="email.set($any($event.target).value)" class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-main-500 focus:ring-4 focus:ring-main-100" placeholder="correo@ejemplo.com" />
+    </div>
+
+    <div>
+      <div class="flex items-center justify-between gap-4">
+        <label for="password" class="block text-sm font-semibold text-slate-700">Contraseña</label>
+        <a routerLink="/" class="text-sm font-bold text-main-700 transition hover:text-main-800">Olvidé mi contraseña</a>
+      </div>
+      <input id="password" name="password" type="password" autocomplete="current-password" [value]="password()" (input)="password.set($any($event.target).value)" class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-main-500 focus:ring-4 focus:ring-main-100" placeholder="Ingresa tu contraseña" />
+    </div>
+
+    <label for="remember" class="group flex cursor-pointer items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50/80 p-4 text-sm text-slate-600 transition hover:border-main-200 hover:bg-main-50/60">
+      <input id="remember" name="remember" type="checkbox" class="remember-checkbox peer sr-only" />
+      <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border-2 border-slate-300 bg-white text-white transition group-hover:border-main-400 peer-checked:border-main-600 peer-checked:bg-main-600 peer-focus-visible:ring-4 peer-focus-visible:ring-main-100">
+        <svg class="remember-check h-4 w-4 scale-75 opacity-0 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+        </svg>
+      </span>
+      <span>Mantener mi sesión iniciada</span>
+    </label>
+
+    @if (feedback()) {
+      <p class="rounded-2xl border border-main-100 bg-main-50 px-4 py-3 text-sm font-semibold text-main-800">
+        {{ feedback() }}
+      </p>
+    }
+
+    <button type="submit" [disabled]="isSubmitting()" class="group flex w-full items-center justify-center gap-2 rounded-2xl bg-main-600 px-5 py-3 font-bold text-white shadow-lg shadow-main-600/25 transition hover:-translate-y-0.5 hover:bg-main-700 hover:shadow-main-600/35 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0">
+      <span>{{ isSubmitting() ? 'Ingresando...' : 'Ingresar a mi cuenta' }}</span>
+      <svg class="h-4 w-4 transition group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+      </svg>
+    </button>
+
+    <p class="text-center text-sm text-slate-600">
+      ¿Aún no tienes cuenta?
+      <a routerLink="/registro" class="font-black text-main-700 transition hover:text-main-800">Crear cuenta</a>
+    </p>
+  </div>
+</form>
