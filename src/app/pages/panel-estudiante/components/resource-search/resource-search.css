@@ -1,1 +1,50 @@
-/* styles */
+:host {
+  display: block;
+}
+
+.card-title {
+  font-family: Inter, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  letter-spacing: -0.018em;
+}
+
+.search-shell {
+  transition: transform 240ms ease, filter 240ms ease;
+}
+
+.search-shell.searching {
+  animation: search-breathe 520ms ease;
+}
+
+.search-results {
+  transition: transform 240ms ease, opacity 240ms ease, box-shadow 240ms ease;
+}
+
+.search-results.results-searching {
+  animation: results-soft-pop 520ms ease;
+}
+
+@keyframes search-breathe {
+  0% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 0 rgba(13, 148, 136, 0));
+  }
+  45% {
+    transform: scale(1.01);
+    filter: drop-shadow(0 16px 28px rgba(13, 148, 136, 0.14));
+  }
+  100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 0 rgba(13, 148, 136, 0));
+  }
+}
+
+@keyframes results-soft-pop {
+  0% {
+    opacity: 0.78;
+    transform: translateY(8px) scale(0.99);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

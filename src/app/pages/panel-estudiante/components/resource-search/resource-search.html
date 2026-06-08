@@ -1,5 +1,5 @@
 <section class="pt-6">
-  <div class="relative">
+  <div class="search-shell relative" [class.searching]="isSearching()">
     <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
         <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z" />
@@ -8,10 +8,15 @@
     <input
       type="text"
       placeholder="Buscar recursos educativos... (Presiona Enter para buscar)"
-      class="rounded-2xl border border-slate-200 bg-white pl-12 pr-5 py-3.5 w-full outline-none focus:border-main-400 focus:ring-2 focus:ring-main-100 transition"
+      class="rounded-2xl border border-slate-200 bg-white pl-12 pr-12 py-3.5 w-full outline-none focus:border-main-400 focus:ring-2 focus:ring-main-100 transition"
       (keyup.enter)="onSearch($event)"
       (input)="onInputChange($event)"
     />
+    @if (isSearching()) {
+      <span class="absolute right-4 top-1/2 grid h-5 w-5 -translate-y-1/2 place-items-center text-main-600">
+        <span class="h-4 w-4 animate-spin rounded-full border-2 border-main-200 border-t-main-600"></span>
+      </span>
+    }
   </div>
 
   <!-- Las categorías y resultados solo aparecen después de buscar -->
@@ -32,7 +37,7 @@
       </div>
 
       <!-- Módulo Simulado de Resultados de Búsqueda -->
-      <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <div class="search-results rounded-2xl border border-slate-200 bg-white p-6 shadow-sm" [class.results-searching]="isSearching()">
         <h3 class="text-lg font-bold text-slate-900">
           Resultados para "<span class="text-main-600">{{ searchQuery() }}</span>"
         </h3>
@@ -52,8 +57,8 @@
               </svg>
             </div>
             <div>
-              <h4 class="font-bold text-slate-900 line-clamp-1">Introducción a {{ searchQuery() }}</h4>
-              <p class="text-xs text-slate-500 mt-0.5">Subido hace 2 días • PDF</p>
+              <h4 class="card-title line-clamp-1 font-semibold leading-tight tracking-tight text-slate-900">Introducción a {{ searchQuery() }}</h4>
+              <p class="mt-1 text-xs font-semibold text-slate-500">Subido hace 2 días • PDF</p>
             </div>
           </div>
           <div class="flex items-center gap-4 rounded-xl border border-slate-100 bg-slate-50 p-4 transition-colors hover:border-slate-200 hover:bg-slate-100 cursor-pointer">
@@ -65,8 +70,8 @@
               </svg>
             </div>
             <div>
-              <h4 class="font-bold text-slate-900 line-clamp-1">Conceptos avanzados de {{ searchQuery() }}</h4>
-              <p class="text-xs text-slate-500 mt-0.5">Por Prof. Carlos • Diapositivas</p>
+              <h4 class="card-title line-clamp-1 font-semibold leading-tight tracking-tight text-slate-900">Conceptos avanzados de {{ searchQuery() }}</h4>
+              <p class="mt-1 text-xs font-semibold text-slate-500">Por Prof. Carlos • Diapositivas</p>
             </div>
           </div>
         </div>

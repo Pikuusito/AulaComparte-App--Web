@@ -1,0 +1,200 @@
+@if (panelUi.isPublishResourceOpen()) {
+  <section class="fixed inset-0 z-[80] grid place-items-center bg-slate-950/45 px-4 py-6 backdrop-blur-sm sm:px-6" aria-modal="true" role="dialog" aria-labelledby="publish-resource-title">
+    <div class="publish-card relative max-h-[92vh] w-full max-w-5xl overflow-hidden rounded-[2rem] border border-white/70 bg-white shadow-[0_32px_90px_rgba(15,23,42,0.24)]">
+      <div class="absolute -right-20 -top-20 h-56 w-56 rounded-full bg-main-100 blur-3xl"></div>
+      <div class="absolute -bottom-24 left-12 h-56 w-56 rounded-full bg-emerald-100 blur-3xl"></div>
+
+      <div class="relative flex max-h-[92vh] flex-col overflow-y-auto">
+        <header class="flex items-start justify-between gap-4 border-b border-slate-100 px-5 py-5 sm:px-7">
+          <div class="flex gap-4">
+            <div class="grid h-14 w-14 shrink-0 place-items-center rounded-[1.35rem] bg-gradient-to-br from-main-100 via-white to-emerald-100 text-main-700 shadow-[0_14px_30px_rgba(13,148,136,0.16)] ring-1 ring-main-100/80">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <path d="M14 2v6h6" />
+                <path d="M12 18v-6" />
+                <path d="M9 15h6" />
+              </svg>
+            </div>
+            <div>
+              <p class="text-xs font-black uppercase tracking-[0.18em] text-main-700">Nuevo material</p>
+              <h2 id="publish-resource-title" class="mt-1 text-2xl font-extrabold tracking-tight text-slate-950 sm:text-3xl">Publicar recurso educativo</h2>
+              <p class="mt-2 text-sm leading-6 text-slate-500">Comparte material útil para apoyar a otros estudiantes de la comunidad.</p>
+            </div>
+          </div>
+
+          <button type="button" class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-slate-50 text-slate-500 transition hover:bg-red-50 hover:text-red-500" title="Cerrar formulario" (click)="close()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.4">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </header>
+
+        @if (wasPublished()) {
+          <div class="relative px-5 py-8 text-center sm:px-7">
+            <div class="mx-auto grid h-16 w-16 place-items-center rounded-3xl bg-emerald-100 text-emerald-700">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <h3 class="mt-5 text-2xl font-extrabold text-slate-950">Recurso listo para compartir</h3>
+            <p class="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-500">Cuando exista backend, este formulario enviará el material para revisión o publicación.</p>
+            <div class="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
+              <button type="button" class="rounded-full bg-main-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-main-600/20 transition hover:bg-main-700" (click)="resetForm()">Publicar otro</button>
+              <button type="button" class="rounded-full bg-slate-100 px-6 py-3 text-sm font-bold text-slate-700 transition hover:bg-slate-200" (click)="close()">Cerrar</button>
+            </div>
+          </div>
+        } @else {
+          <form class="relative grid gap-0 lg:grid-cols-[0.8fr_1.45fr]" (submit)="submit($event)">
+            <aside class="relative overflow-hidden border-b border-slate-100 bg-gradient-to-br from-main-950 via-main-800 to-emerald-700 p-5 text-white sm:p-7 lg:border-b-0 lg:border-r lg:border-white/10">
+              <div class="absolute -right-20 -top-20 h-52 w-52 rounded-full bg-white/10 blur-3xl"></div>
+              <div class="absolute -bottom-24 left-8 h-56 w-56 rounded-full bg-cyan-300/20 blur-3xl"></div>
+
+              <div class="relative flex h-full flex-col gap-6">
+                <div class="preview-panel-copy">
+                  <p class="text-xs font-black uppercase tracking-[0.2em] text-main-100">Vista previa</p>
+                  <article class="preview-panel-copy mt-4 rounded-[1.75rem] border border-white/15 bg-white/12 p-5 shadow-2xl shadow-black/10 backdrop-blur-md">
+                    <div class="flex items-center justify-between gap-3">
+                      <span class="rounded-full bg-white/90 px-3 py-1 text-xs font-black text-main-800">{{ resourceType() }}</span>
+                      <span class="rounded-full bg-white/10 px-3 py-1 text-xs font-bold text-main-50">{{ format() }}</span>
+                    </div>
+                    <h3 class="mt-5 text-xl font-black leading-tight tracking-tight">
+                      {{ title().trim() || 'Nombre del recurso' }}
+                    </h3>
+                    <p class="mt-3 line-clamp-4 text-sm leading-6 text-main-50/80">
+                      {{ description().trim() || 'Agrega una descripción breve para explicar qué contiene el material y cómo ayuda a estudiar.' }}
+                    </p>
+                    <div class="mt-5 flex flex-wrap gap-2">
+                      <span class="rounded-full bg-white/10 px-3 py-1 text-xs font-bold text-main-50">{{ subject().trim() || 'Curso' }}</span>
+                      <span class="rounded-full bg-white/10 px-3 py-1 text-xs font-bold text-main-50">{{ level() }}</span>
+                    </div>
+                    <div class="mt-6 border-t border-white/10 pt-4">
+                      <p class="responsible-copy text-xs font-bold uppercase tracking-[0.14em] text-main-100/80">Responsable</p>
+                      <p class="responsible-copy mt-1 text-sm font-semibold">{{ author().trim() || 'Nombre del autor' }}</p>
+                    </div>
+                  </article>
+                </div>
+
+                <div class="mt-auto rounded-[1.5rem] border border-white/10 bg-white/10 p-4 backdrop-blur-sm">
+                  <h4 class="text-sm font-black">Antes de publicar</h4>
+                  <ul class="mt-3 space-y-2 text-sm leading-6 text-main-50/85">
+                    <li class="flex gap-2"><span class="text-emerald-200">•</span> Usa un título claro y específico.</li>
+                    <li class="flex gap-2"><span class="text-emerald-200">•</span> Verifica que el material tenga permiso de uso.</li>
+                    <li class="flex gap-2"><span class="text-emerald-200">•</span> Describe el curso y nivel para que sea fácil encontrarlo.</li>
+                  </ul>
+                </div>
+              </div>
+            </aside>
+
+            <div class="space-y-6 px-5 py-6 sm:px-7">
+              <div class="rounded-[1.75rem] border border-slate-100 bg-slate-50/70 p-4 sm:p-5">
+                <div class="flex items-center gap-3">
+                  <span class="grid h-9 w-9 place-items-center rounded-2xl bg-main-100 text-sm font-black text-main-700">1</span>
+                  <div>
+                    <h3 class="text-sm font-black uppercase tracking-[0.16em] text-slate-500">Información básica</h3>
+                    <p class="mt-1 text-xs font-medium text-slate-400">Datos principales para clasificar el material.</p>
+                  </div>
+                </div>
+
+                <div class="mt-5 grid gap-4 sm:grid-cols-2">
+                  <label class="sm:col-span-2">
+                    <span class="text-sm font-bold text-slate-700">Título del recurso</span>
+                    <input type="text" class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-main-400 focus:ring-4 focus:ring-main-100" placeholder="Ej. Guía de ejercicios de álgebra" [value]="title()" (input)="updateTitle($event.target)" />
+                  </label>
+
+                  <label>
+                    <span class="text-sm font-bold text-slate-700">Tipo de material</span>
+                    <select class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-900 outline-none transition focus:border-main-400 focus:ring-4 focus:ring-main-100" [value]="resourceType()" (change)="updateResourceType($event.target)">
+                      @for (type of resourceTypes; track type) {
+                        <option [value]="type">{{ type }}</option>
+                      }
+                    </select>
+                  </label>
+
+                  <label>
+                    <span class="text-sm font-bold text-slate-700">Nivel educativo</span>
+                    <select class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-900 outline-none transition focus:border-main-400 focus:ring-4 focus:ring-main-100" [value]="level()" (change)="updateLevel($event.target)">
+                      @for (item of educationLevels; track item) {
+                        <option [value]="item">{{ item }}</option>
+                      }
+                    </select>
+                  </label>
+
+                  <label>
+                    <span class="text-sm font-bold text-slate-700">Curso o área</span>
+                    <input type="text" class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-main-400 focus:ring-4 focus:ring-main-100" placeholder="Ej. Matemáticas" [value]="subject()" (input)="updateSubject($event.target)" />
+                  </label>
+
+                  <label>
+                    <span class="responsible-copy text-sm font-bold text-slate-700">Autor o responsable</span>
+                    <input type="text" class="responsible-copy mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-main-400 focus:ring-4 focus:ring-main-100" placeholder="Tu nombre o docente" [value]="author()" (input)="updateAuthor($event.target)" />
+                  </label>
+                </div>
+              </div>
+
+              <div class="rounded-[1.75rem] border border-slate-100 bg-white p-4 shadow-sm sm:p-5">
+                <div class="flex items-center gap-3">
+                  <span class="grid h-9 w-9 place-items-center rounded-2xl bg-emerald-100 text-sm font-black text-emerald-700">2</span>
+                  <div>
+                    <h3 class="text-sm font-black uppercase tracking-[0.16em] text-slate-500">Detalles del recurso</h3>
+                    <p class="mt-1 text-xs font-medium text-slate-400">Explica el contenido y adjunta el material.</p>
+                  </div>
+                </div>
+
+                <div class="mt-5 grid gap-4 sm:grid-cols-2">
+                  <label class="sm:col-span-2">
+                    <span class="text-sm font-bold text-slate-700">Descripción</span>
+                    <textarea rows="4" class="mt-2 w-full resize-none rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-main-400 focus:ring-4 focus:ring-main-100" placeholder="Describe qué contiene y para qué curso puede servir." [value]="description()" (input)="updateDescription($event.target)"></textarea>
+                  </label>
+
+                  <label>
+                    <span class="text-sm font-bold text-slate-700">Formato</span>
+                    <select class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-900 outline-none transition focus:border-main-400 focus:ring-4 focus:ring-main-100" [value]="format()" (change)="updateFormat($event.target)">
+                      @for (item of formats; track item) {
+                        <option [value]="item">{{ item }}</option>
+                      }
+                    </select>
+                  </label>
+
+                  @if (requiresLink()) {
+                    <label>
+                      <span class="text-sm font-bold text-slate-700">Enlace del recurso</span>
+                      <input type="url" class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-main-400 focus:ring-4 focus:ring-main-100" placeholder="https://..." [value]="resourceLink()" (input)="updateResourceLink($event.target)" />
+                    </label>
+                  } @else {
+                    <label>
+                      <span class="text-sm font-bold text-slate-700">Archivo o referencia</span>
+                      <input type="file" class="mt-2 w-full rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-600 file:mr-4 file:rounded-full file:border-0 file:bg-main-100 file:px-4 file:py-2 file:text-sm file:font-bold file:text-main-700 hover:bg-white" (change)="updateFile($event.target)" />
+                      @if (fileName()) {
+                        <span class="mt-2 block text-xs font-semibold text-main-700">{{ fileName() }}</span>
+                      }
+                    </label>
+                  }
+                </div>
+              </div>
+
+              <label class="flex gap-3 rounded-3xl border border-amber-100 bg-amber-50/80 p-4 text-sm leading-6 text-amber-900">
+                <input type="checkbox" class="mt-1 h-4 w-4 rounded border-amber-300 text-main-600 focus:ring-main-500" [checked]="hasPermission()" (change)="updateCheckbox($event.target)" />
+                <span><strong class="font-black">Confirmo que puedo compartir este material.</strong> Es propio, libre o tengo permiso para publicarlo con fines educativos.</span>
+              </label>
+
+              @if (feedback()) {
+                <p class="rounded-2xl bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-600">{{ feedback() }}</p>
+              }
+
+              <footer class="sticky bottom-0 -mx-5 flex flex-col-reverse gap-3 border-t border-slate-100 bg-white/90 px-5 py-4 backdrop-blur sm:-mx-7 sm:flex-row sm:justify-end sm:px-7">
+                <button type="button" class="rounded-full bg-slate-100 px-6 py-3 text-sm font-bold text-slate-700 transition hover:bg-slate-200" (click)="close()">Cancelar</button>
+                <button type="submit" class="rounded-full bg-main-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-main-600/20 transition hover:-translate-y-0.5 hover:bg-main-700 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0" [disabled]="isSubmitting()">
+                  @if (isSubmitting()) {
+                    Publicando...
+                  } @else {
+                    Publicar recurso
+                  }
+                </button>
+              </footer>
+            </div>
+          </form>
+        }
+      </div>
+    </div>
+  </section>
+}

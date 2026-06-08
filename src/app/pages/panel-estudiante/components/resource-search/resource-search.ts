@@ -14,6 +14,8 @@ interface Category {
 
 // Simulación de las etiquetas de categorías para el filtro de búsqueda, que tendra cada material que se suba a la plataforma
 export class ResourceSearchComponent {
+  private searchAnimationId: ReturnType<typeof setTimeout> | undefined;
+
   categories = signal<Category[]>([
     { label: 'Todos', active: true },
     { label: 'Libros' },
@@ -27,6 +29,7 @@ export class ResourceSearchComponent {
   selectedCategory = signal<string>('Todos');
   searchQuery = signal<string>('');
   hasSearched = signal<boolean>(false);
+  isSearching = signal<boolean>(false);
 
   selectCategory(label: string): void {
     this.selectedCategory.set(label);
@@ -35,24 +38,42 @@ export class ResourceSearchComponent {
     );
   }
 
-  onSearch(event: any): void {
-    const value = event.target.value.trim();
+  onSearch(event: Event): void {
+    const value = this.getInputValue(event);
+
     if (value.length > 0) {
       this.searchQuery.set(value);
       this.hasSearched.set(true);
+      this.playSearchAnimation();
     } else {
       this.searchQuery.set('');
       this.hasSearched.set(false);
+      this.isSearching.set(false);
     }
   }
 
-  onInputChange(event: any): void {
+  onInputChange(event: Event): void {
     // Si borra todo el texto, limpiamos el estado de búsqueda
-    if (event.target.value.trim() === '') {
+    if (this.getInputValue(event) === '') {
       this.searchQuery.set('');
       this.hasSearched.set(false);
       this.selectedCategory.set('Todos'); // Resetea filtro
+      this.isSearching.set(false);
     }
+  }
+
+  private getInputValue(event: Event): string {
+    const input = event.target as HTMLInputElement | null;
+    return input?.value.trim() ?? '';
+  }
+
+  private playSearchAnimation(): void {
+    if (this.searchAnimationId) {
+      clearTimeout(this.searchAnimationId);
+    }
+
+    this.isSearching.set(true);
+    this.searchAnimationId = setTimeout(() => this.isSearching.set(false), 520);
   }
 
   // Animación de los badges de categoría, con diferentes colores segun la categoría y un estilo diferente

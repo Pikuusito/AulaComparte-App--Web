@@ -1,15 +1,17 @@
 import { Component, signal, computed } from '@angular/core';
 import { NgClass } from '@angular/common';
 
+export type ResourceType = 'Guía' | 'Apuntes' | 'Libro' | 'Ejercicios' | 'Diapositivas';
+
 export interface Resource {
   id: number;
   title: string;
   description: string;
-  type: string;
+  type: ResourceType;
   subject: string;
   level: string;
   author: string;
-  authorInitials: string;
+  savedAgo: string;
   downloads: number;
   isSaved: boolean;
 }
@@ -22,9 +24,6 @@ export interface Resource {
   styleUrl: './saved-resources.css',
 })
 export class SavedResourcesComponent {
-  
-  
-  // Base de datos simulada de todos los recursos
   resources = signal<Resource[]>([
     {
       id: 1,
@@ -34,7 +33,7 @@ export class SavedResourcesComponent {
       subject: 'Matemáticas',
       level: 'Universitario',
       author: 'Carlos Mendoza',
-      authorInitials: 'CM',
+      savedAgo: 'Guardado hace 1 dia',
       downloads: 45,
       isSaved: true,
     },
@@ -46,7 +45,7 @@ export class SavedResourcesComponent {
       subject: 'Historia',
       level: 'Secundaria',
       author: 'María López',
-      authorInitials: 'ML',
+      savedAgo: 'Guardado ayer',
       downloads: 32,
       isSaved: true,
     },
@@ -58,9 +57,9 @@ export class SavedResourcesComponent {
       subject: 'Física',
       level: 'Universitario',
       author: 'Ana Torres',
-      authorInitials: 'AT',
+      savedAgo: 'Guardado hace 2 dias',
       downloads: 58,
-      isSaved: true, // Este no aparecerá porque no está guardado
+      isSaved: true,
     },
     {
       id: 4,
@@ -70,7 +69,7 @@ export class SavedResourcesComponent {
       subject: 'Biología',
       level: 'Universitario',
       author: 'Jorge Quispe',
-      authorInitials: 'JQ',
+      savedAgo: 'Guardado hace 3 dias',
       downloads: 27,
       isSaved: true,
     },
@@ -82,7 +81,7 @@ export class SavedResourcesComponent {
       subject: 'Lenguaje',
       level: 'Secundaria',
       author: 'Rosa Huamán',
-      authorInitials: 'RH',
+      savedAgo: 'Guardado hace 4 dias',
       downloads: 41,
       isSaved: true,
     },
@@ -94,30 +93,28 @@ export class SavedResourcesComponent {
       subject: 'Computación',
       level: 'Universitario',
       author: 'Luis Vargas',
-      authorInitials: 'LV',
+      savedAgo: 'Guardado hace 5 dias',
       downloads: 36,
-      isSaved: true, // No aparecerá
+      isSaved: true,
     },
   ]);
 
 
-  // Señal computada: solo expone los recursos que tienen isSaved === true
   savedResources = computed(() => this.resources().filter(r => r.isSaved));
 
-  getTypeBadgeClasses(type: string): string {
-    const classMap: Record<string, string> = {
-      'Guía': 'bg-blue-100 text-blue-700 border-blue-200',
-      'Apuntes': 'bg-amber-100 text-amber-700 border-amber-200',
-      'Ejercicios': 'bg-emerald-100 text-emerald-700 border-emerald-200',
-      'Diapositivas': 'bg-purple-100 text-purple-700 border-purple-200',
-      'Libro': 'bg-rose-100 text-rose-700 border-rose-200',
+  getTypeBadgeClasses(type: ResourceType): string {
+    const classMap: Record<ResourceType, string> = {
+      Guía: 'bg-blue-100 text-blue-700 border-blue-200',
+      Apuntes: 'bg-amber-100 text-amber-700 border-amber-200',
+      Libro: 'bg-rose-100 text-rose-700 border-rose-200',
+      Ejercicios: 'bg-emerald-100 text-emerald-700 border-emerald-200',
+      Diapositivas: 'bg-purple-100 text-purple-700 border-purple-200',
     };
-    return classMap[type] ?? 'bg-slate-100 text-slate-700 border-slate-200';
+
+    return classMap[type];
   }
 
   toggleSave(resourceId: number): void {
-    // Al modificar isSaved, la señal computada (savedResources) se actualizará automáticamente
-    // y el recurso desaparecerá visualmente de la lista.
     this.resources.update(resources => 
       resources.map(r => r.id === resourceId ? { ...r, isSaved: !r.isSaved } : r)
     );
