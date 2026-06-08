@@ -7,22 +7,70 @@
     </span>
     <input
       type="text"
-      placeholder="Buscar recursos educativos..."
+      placeholder="Buscar recursos educativos... (Presiona Enter para buscar)"
       class="rounded-2xl border border-slate-200 bg-white pl-12 pr-5 py-3.5 w-full outline-none focus:border-main-400 focus:ring-2 focus:ring-main-100 transition"
+      (keyup.enter)="onSearch($event)"
+      (input)="onInputChange($event)"
     />
   </div>
 
-  <div class="flex flex-wrap gap-2 mt-4">
-    @for (cat of categories(); track cat.label) {
-      <button
-        type="button"
-        (click)="selectCategory(cat.label)"
-        [class]="cat.active
-          ? 'rounded-full px-4 py-2 text-sm font-semibold cursor-pointer transition bg-main-600 text-white shadow-md shadow-main-600/25'
-          : 'rounded-full px-4 py-2 text-sm font-semibold cursor-pointer transition bg-white text-slate-600 border border-slate-200 hover:border-main-300 hover:text-main-700'"
-      >
-        {{ cat.label }}
-      </button>
-    }
-  </div>
+  <!-- Las categorías y resultados solo aparecen después de buscar -->
+  @if (hasSearched()) {
+    <div class="mt-6 animate-in fade-in slide-in-from-top-4 duration-500">
+      
+      <!-- Etiquetas de filtro por categoría -->
+      <div class="mb-5 flex flex-wrap gap-2">
+        @for (cat of categories(); track cat.label) {
+          <button
+            type="button"
+            (click)="selectCategory(cat.label)"
+            [class]="getCategoryClasses(cat.label, !!cat.active)"
+          >
+            {{ cat.label }}
+          </button>
+        }
+      </div>
+
+      <!-- Módulo Simulado de Resultados de Búsqueda -->
+      <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        <h3 class="text-lg font-bold text-slate-900">
+          Resultados para "<span class="text-main-600">{{ searchQuery() }}</span>"
+        </h3>
+        
+        @if (selectedCategory() !== 'Todos') {
+          <p class="mt-1 text-sm text-slate-500">Filtrando por categoría: <span class="font-semibold text-slate-700">{{ selectedCategory() }}</span></p>
+        } @else {
+          <p class="mt-1 text-sm text-slate-500">Mostrando resultados en todas las categorías.</p>
+        }
+
+        <!-- Tarjetas simuladas de resultados -->
+        <div class="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div class="flex items-center gap-4 rounded-xl border border-slate-100 bg-slate-50 p-4 transition-colors hover:border-slate-200 hover:bg-slate-100 cursor-pointer">
+            <div class="grid h-12 w-12 shrink-0 place-items-center rounded-lg bg-main-100 text-main-600">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-900 line-clamp-1">Introducción a {{ searchQuery() }}</h4>
+              <p class="text-xs text-slate-500 mt-0.5">Subido hace 2 días • PDF</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-4 rounded-xl border border-slate-100 bg-slate-50 p-4 transition-colors hover:border-slate-200 hover:bg-slate-100 cursor-pointer">
+            <div class="grid h-12 w-12 shrink-0 place-items-center rounded-lg bg-emerald-100 text-emerald-600">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path d="M12 14l9-5-9-5-9 5 9 5z" />
+                <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" />
+              </svg>
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-900 line-clamp-1">Conceptos avanzados de {{ searchQuery() }}</h4>
+              <p class="text-xs text-slate-500 mt-0.5">Por Prof. Carlos • Diapositivas</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
 </section>
