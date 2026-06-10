@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
 // Lógica Básica para inicio de sesión, sin validación real ni conexión a backend. (Temporal)
 export class LoginForm {
   private readonly router = inject(Router);
+  private readonly moderatorEmail = 'moderador@aulacomparte.edu.pe';
 
   readonly email = signal('');
   readonly password = signal('');
@@ -32,7 +33,11 @@ export class LoginForm {
     // Simular un breve delay de carga
     setTimeout(() => {
       this.isSubmitting.set(false);
-      this.router.navigate(['/panel-estudiante']);
+      this.router.navigate([this.isModeratorLogin() ? '/panel-moderador' : '/panel-estudiante']);
     }, 600);
+  }
+
+  private isModeratorLogin(): boolean {
+    return this.email().trim().toLowerCase() === this.moderatorEmail;
   }
 }

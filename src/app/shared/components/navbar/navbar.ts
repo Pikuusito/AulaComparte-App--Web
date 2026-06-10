@@ -17,6 +17,14 @@ export class Navbar {
     return this.router.url.includes('/panel-estudiante');
   }
 
+  get isModeratorPanel(): boolean {
+    return this.router.url.includes('/panel-moderador');
+  }
+
+  get isPanelPage(): boolean {
+    return this.isStudentPanel || this.isModeratorPanel;
+  }
+
   openPublishResource(): void {
     this.panelUi.openPublishResource();
   }

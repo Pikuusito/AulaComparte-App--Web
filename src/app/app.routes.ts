@@ -3,6 +3,7 @@ import { Home } from './pages/home/home';
 import { Login } from './pages/login/login';
 import { Registro } from './pages/registro/registro';
 import { PanelEstudiante } from './pages/panel-estudiante/panel-estudiante';
+import { PanelModerador } from './pages/panel-moderador/panel-moderador';
 
 export const routes: Routes = [
   {
@@ -20,5 +21,9 @@ export const routes: Routes = [
   {
     path: 'panel-estudiante',
     component: PanelEstudiante,
+  },
+  {
+    path: 'panel-moderador',
+    component: PanelModerador,
   },
 ];

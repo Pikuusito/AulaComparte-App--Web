@@ -1,0 +1,84 @@
+:host {
+  display: block;
+}
+
+:host,
+:host * {
+  font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  letter-spacing: -0.005em;
+}
+
+:host :is(.font-bold, .font-semibold, .font-extrabold, .font-black, strong) {
+  font-weight: 650;
+  line-height: 1.35;
+  letter-spacing: -0.006em;
+}
+
+.review-modal {
+  animation: review-modal-in 220ms ease-out;
+}
+
+.badge {
+  border-radius: 999px;
+  padding: 0.35rem 0.8rem;
+  font-size: 0.75rem;
+  font-weight: 650;
+  line-height: 1.1rem;
+  letter-spacing: normal;
+  box-shadow: inset 0 0 0 1px rgb(15 23 42 / 0.06);
+}
+
+.detail-box {
+  border: 1px solid #e2e8f0;
+  border-radius: 1.25rem;
+  background: #ffffff;
+  padding: 1rem;
+}
+
+.detail-box span {
+  display: block;
+  color: #64748b;
+  font-size: 0.75rem;
+  font-weight: 650;
+  line-height: 1.1rem;
+}
+
+.detail-box strong {
+  display: block;
+  margin-top: 0.35rem;
+  color: #0f172a;
+  font-size: 0.95rem;
+  font-weight: 650;
+  line-height: 1.5;
+}
+
+.check-row {
+  display: flex;
+  gap: 0.75rem;
+  border: 1px solid rgba(13, 148, 136, 0.12);
+  border-radius: 1.15rem;
+  background: rgba(255, 255, 255, 0.82);
+  padding: 0.85rem;
+  color: #334155;
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.5rem;
+}
+
+.check-row input {
+  margin-top: 0.2rem;
+  height: 1rem;
+  width: 1rem;
+  accent-color: #0d9488;
+}
+
+@keyframes review-modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

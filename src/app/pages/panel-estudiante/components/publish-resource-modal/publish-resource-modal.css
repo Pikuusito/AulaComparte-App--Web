@@ -2,8 +2,13 @@
   display: block;
 }
 
+.publish-overlay {
+  animation: overlay-in 180ms ease-out;
+}
+
 .publish-card {
-  animation: publish-modal-in 220ms ease-out;
+  max-height: calc(100vh - 1.5rem);
+  animation: publish-modal-in 240ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .publish-card * {
@@ -20,23 +25,143 @@
   background: rgba(13, 148, 136, 0.28);
 }
 
-.preview-panel-copy {
-  font-family: Inter, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+.publish-preview,
+.preview-resource-card,
+.step-panel {
+  font-family: Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
-.preview-panel-copy h3 {
-  letter-spacing: -0.018em;
+.publish-preview {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 100%;
 }
 
-.responsible-copy {
-  font-family: Inter, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  letter-spacing: -0.012em;
+.wizard-step,
+.wizard-step * {
+  font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.wizard-step {
+  min-height: 3.75rem;
+}
+
+.wizard-step span:last-child span:first-child {
+  color: currentColor;
+  font-weight: 650;
+  letter-spacing: normal;
+}
+
+.wizard-step span:last-child span:last-child {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+}
+
+.publish-form,
+.publish-form .step-panel,
+.publish-form input,
+.publish-form select,
+.publish-form textarea,
+.publish-form button {
+  font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.45;
+  letter-spacing: -0.005em;
+}
+
+.publish-form :is(.font-bold, .font-extrabold, .font-black, strong) {
+  font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 650;
+  line-height: 1.35;
+  letter-spacing: -0.006em;
+}
+
+.publish-form :is(input, select, textarea) {
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.publish-form .step-panel p {
+  line-height: 1.55;
+}
+
+.publish-form .step-panel,
+.publish-form .step-panel * {
+  font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+}
+
+.publish-form .step-panel :is(.font-bold, .font-extrabold, .font-black, strong) {
+  font-weight: 600 !important;
+  letter-spacing: -0.004em;
+}
+
+.publish-form .step-panel :is(.uppercase, [class*='uppercase']) {
+  font-weight: 650 !important;
+  letter-spacing: normal !important;
+}
+
+.publish-form .step-panel p,
+.publish-form .step-panel label,
+.publish-form .step-panel span {
+  line-height: 1.55;
+}
+
+.publish-card :is(.uppercase, [class*='uppercase'], [class*='tracking-']) {
+  letter-spacing: normal !important;
+}
+
+.preview-resource-card {
+  position: relative;
+  overflow: hidden;
+  animation: preview-float 520ms ease-out;
+  transition:
+    transform 220ms ease,
+    border-color 220ms ease,
+    background 220ms ease;
+}
+
+.preview-resource-card:hover {
+  border-color: rgba(13, 148, 136, 0.22);
+  background: rgba(255, 255, 255, 0.94);
+  transform: translateY(-3px);
+}
+
+.preview-title {
+  overflow-wrap: anywhere;
+}
+
+.progress-fill {
+  transition: width 260ms ease;
+}
+
+.step-panel {
+  animation: step-in 220ms ease-out;
+}
+
+.field-error {
+  display: block;
+  margin-top: 0.375rem;
+  color: #b91c1c;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1rem;
+}
+
+@keyframes overlay-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes publish-modal-in {
   from {
     opacity: 0;
-    transform: translateY(14px) scale(0.98);
+    transform: translateY(18px) scale(0.975);
   }
   to {
     opacity: 1;
@@ -44,8 +169,54 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
+@keyframes preview-float {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes step-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 1023px) {
+  .publish-preview {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
   .publish-card {
+    border-radius: 1.5rem;
+  }
+
+  .preview-resource-card {
+    border-radius: 1.35rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .publish-overlay,
+  .publish-card,
+  .preview-resource-card,
+  .step-panel {
     animation: none;
+  }
+
+  .preview-resource-card,
+  .progress-fill {
+    transition: none;
   }
 }
