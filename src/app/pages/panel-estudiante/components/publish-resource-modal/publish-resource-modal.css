@@ -28,7 +28,7 @@
 .publish-preview,
 .preview-resource-card,
 .step-panel {
-  font-family: Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: var(--app-font-family);
 }
 
 .publish-preview {
@@ -41,7 +41,7 @@
 
 .wizard-step,
 .wizard-step * {
-  font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: var(--app-font-family);
 }
 
 .wizard-step {
@@ -66,13 +66,13 @@
 .publish-form select,
 .publish-form textarea,
 .publish-form button {
-  font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: var(--app-font-family);
   line-height: 1.45;
   letter-spacing: -0.005em;
 }
 
 .publish-form :is(.font-bold, .font-extrabold, .font-black, strong) {
-  font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: var(--app-font-family);
   font-weight: 650;
   line-height: 1.35;
   letter-spacing: -0.006em;
@@ -89,7 +89,7 @@
 
 .publish-form .step-panel,
 .publish-form .step-panel * {
-  font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+  font-family: var(--app-font-family) !important;
 }
 
 .publish-form .step-panel :is(.font-bold, .font-extrabold, .font-black, strong) {

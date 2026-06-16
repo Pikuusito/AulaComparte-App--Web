@@ -1,0 +1,228 @@
+@if (moderationData.selectedResource(); as resource) {
+  <section
+    class="details-overlay fixed inset-0 z-[80] grid place-items-center bg-slate-950/55 px-4 py-6 backdrop-blur-md"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="resource-details-title"
+    tabindex="-1"
+    (click)="closeFromBackdrop($event)"
+    (keydown.escape)="close()"
+  >
+    <article
+      class="details-card relative w-full max-w-4xl overflow-hidden rounded-[1.75rem] border border-white/70 bg-white shadow-[0_32px_90px_rgba(15,23,42,0.28)]"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-main-100 blur-3xl"></div>
+      <div class="pointer-events-none absolute -bottom-24 left-8 h-52 w-52 rounded-full bg-emerald-100 blur-3xl"></div>
+
+      <header class="relative border-b border-slate-100 px-6 py-6">
+        <button
+          type="button"
+          class="absolute right-5 top-5 grid h-10 w-10 place-items-center rounded-full bg-slate-50 text-slate-500 transition hover:bg-red-50 hover:text-red-500 focus-visible:outline focus-visible:outline-4 focus-visible:outline-red-100"
+          aria-label="Cerrar detalle del recurso"
+          title="Cerrar"
+          (click)="close()"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M18 6 6 18" />
+            <path d="m6 6 12 12" />
+          </svg>
+        </button>
+
+        <div class="resource-title-block">
+          <div [class]="getResourceTypeIconClasses(resource.type)" aria-hidden="true">
+            @switch (resource.type) {
+              @case ('Libro') {
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                  <path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z" />
+                </svg>
+              }
+              @case ('Apuntes') {
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 4h16v16H4z" />
+                  <path d="M8 8h8" />
+                  <path d="M8 12h8" />
+                  <path d="M8 16h5" />
+                </svg>
+              }
+              @case ('Guía') {
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M6 3h9l3 3v15H6z" />
+                  <path d="M15 3v4h4" />
+                  <path d="M9 8h3" />
+                  <path d="M9 12h6" />
+                  <path d="M9 16h5" />
+                </svg>
+              }
+              @case ('Ejercicios') {
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 7h16" />
+                  <path d="M4 12h16" />
+                  <path d="M4 17h10" />
+                  <path d="m16 16 2 2 4-4" />
+                </svg>
+              }
+              @case ('Diapositivas') {
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 4h18v12H3z" />
+                  <path d="M12 16v4" />
+                  <path d="M8 20h8" />
+                </svg>
+              }
+              @case ('Examen') {
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9 3h6l1 2h3v16H5V5h3z" />
+                  <path d="M9 12l2 2 4-4" />
+                  <path d="M8 17h8" />
+                </svg>
+              }
+            }
+          </div>
+          <div class="resource-title-content">
+            <p [class]="getResourceTypeBadgeClasses(resource.type)">
+              {{ resource.type }}
+            </p>
+            <h2
+              id="resource-details-title"
+              class="mt-2 text-2xl font-extrabold leading-tight tracking-tight text-slate-950"
+            >
+              {{ resource.title }}
+            </h2>
+          </div>
+        </div>
+      </header>
+
+      <div class="details-body relative grid gap-5 px-6 py-5 lg:grid-cols-[1fr_0.92fr]">
+        <section>
+          <dl class="details-list">
+            <div>
+              <dt>Categoría</dt>
+              <dd>{{ resource.type }}</dd>
+            </div>
+            <div>
+              <dt>Formato</dt>
+              <dd>{{ resource.format }}</dd>
+            </div>
+            <div>
+              <dt>Nivel</dt>
+              <dd>{{ resource.level }}</dd>
+            </div>
+            <div>
+              <dt>Curso</dt>
+              <dd>{{ resource.subject }}</dd>
+            </div>
+            <div>
+              <dt>Subido por</dt>
+              <dd>{{ resource.author }}</dd>
+            </div>
+            <div>
+              <dt>Subido hace</dt>
+              <dd>{{ resource.submittedAgo }}</dd>
+            </div>
+            <div>
+              <dt>Tamaño</dt>
+              <dd>{{ resource.fileSize }}</dd>
+            </div>
+            <div>
+              <dt>ID recurso</dt>
+              <dd>#{{ resource.id }}</dd>
+            </div>
+          </dl>
+
+          <button type="button" class="full-file-button">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.4"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+            Ver archivo completo
+          </button>
+        </section>
+
+        <section class="criteria-section" aria-labelledby="criteria-title">
+          <h3 id="criteria-title">Criterios</h3>
+          <div class="criteria-list">
+            <label>
+              <input type="checkbox" />
+              <span>Es educativo</span>
+            </label>
+            <label>
+              <input type="checkbox" />
+              <span>Permiso claro</span>
+            </label>
+            <label>
+              <input type="checkbox" />
+              <span>Sin datos sensibles</span>
+            </label>
+            <label>
+              <input type="checkbox" />
+              <span>Fuente verificada</span>
+            </label>
+          </div>
+
+          <label class="author-comment-field">
+            <span>Comentario para el autor</span>
+            <textarea placeholder="Escribe una observación breve" rows="4"></textarea>
+          </label>
+
+          <div class="review-actions">
+            <button type="button" class="accept-button">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M20 6 9 17l-5-5" />
+              </svg>
+              Aceptar
+            </button>
+
+            <button type="button" class="reject-button">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M18 6 6 18" />
+                <path d="m6 6 12 12" />
+              </svg>
+              Rechazar
+            </button>
+          </div>
+        </section>
+      </div>
+    </article>
+  </section>
+}

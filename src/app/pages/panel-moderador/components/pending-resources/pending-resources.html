@@ -23,15 +23,14 @@
 
   @if (moderationData.reviewableResources().length > 0) {
     <div class="w-full max-w-full overflow-x-auto">
-      <table class="resources-table w-full min-w-[56rem]">
+      <table class="resources-table w-full min-w-[50rem]">
         <thead>
           <tr>
             <th scope="col">Recurso</th>
             <th scope="col">Autor</th>
             <th scope="col">Nivel</th>
-            <th scope="col">Tipo</th>
+            <th scope="col">Categoría</th>
             <th scope="col">Estado</th>
-            <th scope="col">Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -40,8 +39,9 @@
               <td class="resource-cell">
                 <button
                   type="button"
-                  class="resource-detail-button"
-                  (click)="moderationData.openReview(resource.id)"
+                  class="resource-detail-summary"
+                  [attr.aria-label]="'Ver detalles de ' + resource.title"
+                  (click)="moderationData.openResourceDetails(resource.id)"
                 >
                   <h3>{{ resource.title }}</h3>
                   <p>{{ resource.description }}</p>
@@ -204,21 +204,6 @@
                         <path d="M12 17h.01" />
                       </svg>
                     }
-                    @case ('En revisión') {
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        aria-hidden="true"
-                      >
-                        <path d="M12 6v6l4 2" />
-                        <circle cx="12" cy="12" r="9" />
-                      </svg>
-                    }
                     @default {
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -238,24 +223,6 @@
                   }
                   {{ resource.status }}
                 </span>
-              </td>
-              <td>
-                <div class="action-buttons">
-                  <button
-                    type="button"
-                    class="approve-button"
-                    (click)="moderationData.approveResource(resource.id)"
-                  >
-                    Aprobar
-                  </button>
-                  <button
-                    type="button"
-                    class="reject-button"
-                    (click)="moderationData.rejectResource(resource.id)"
-                  >
-                    Rechazar
-                  </button>
-                </div>
               </td>
             </tr>
           }

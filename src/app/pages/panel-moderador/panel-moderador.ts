@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ModerationStatsComponent } from './components/moderation-stats/moderation-stats';
 import { ModeratorWelcomeComponent } from './components/moderator-welcome/moderator-welcome';
 import { PendingResourcesComponent } from './components/pending-resources/pending-resources';
-import { ReviewResourceModalComponent } from './components/review-resource-modal/review-resource-modal';
+import { ResourceDetailsModalComponent } from './components/resource-details-modal/resource-details-modal';
 
 @Component({
   selector: 'app-panel-moderador',
@@ -11,7 +11,7 @@ import { ReviewResourceModalComponent } from './components/review-resource-modal
     ModeratorWelcomeComponent,
     ModerationStatsComponent,
     PendingResourcesComponent,
-    ReviewResourceModalComponent,
+    ResourceDetailsModalComponent,
   ],
   templateUrl: './panel-moderador.html',
   styleUrl: './panel-moderador.css',

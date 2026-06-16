@@ -13,7 +13,7 @@ export type ModerationResourceFormat =
   | 'Documento'
   | 'Enlace'
   | 'Material físico';
-export type ModerationStatus = 'Pendiente' | 'En revisión' | 'Aprobado' | 'Rechazado' | 'Reportado';
+export type ModerationStatus = 'Pendiente' | 'Aprobado' | 'Rechazado' | 'Reportado';
 export type ModerationRisk = 'Bajo' | 'Medio' | 'Alto';
 
 export interface ModerationResource {
@@ -26,6 +26,7 @@ export interface ModerationResource {
   level: string;
   author: string;
   submittedAgo: string;
+  fileSize: string;
   status: ModerationStatus;
   risk: ModerationRisk;
   permissionDeclared: boolean;
@@ -54,6 +55,7 @@ export class ModerationDataService {
       level: 'Secundaria',
       author: 'Rosa Huamán',
       submittedAgo: 'Hace 18 min',
+      fileSize: '2.4 MB',
       status: 'Pendiente',
       risk: 'Bajo',
       permissionDeclared: true,
@@ -70,7 +72,8 @@ export class ModerationDataService {
       level: 'Universitario',
       author: 'Jorge Quispe',
       submittedAgo: 'Hace 42 min',
-      status: 'En revisión',
+      fileSize: '860 KB',
+      status: 'Pendiente',
       risk: 'Medio',
       permissionDeclared: true,
       sourceNote: 'Apunte creado por estudiante, requiere revisar legibilidad de la imagen.',
@@ -86,6 +89,7 @@ export class ModerationDataService {
       level: 'Preuniversitario',
       author: 'Luis Vargas',
       submittedAgo: 'Hace 1 h',
+      fileSize: '4.8 MB',
       status: 'Reportado',
       risk: 'Alto',
       permissionDeclared: false,
@@ -102,6 +106,7 @@ export class ModerationDataService {
       level: 'Universitario',
       author: 'Ana Torres',
       submittedAgo: 'Hace 2 h',
+      fileSize: '1.2 MB',
       status: 'Pendiente',
       risk: 'Bajo',
       permissionDeclared: true,
@@ -119,41 +124,20 @@ export class ModerationDataService {
     const resources = this.resourcesState();
 
     return {
-      pending: resources.filter(
-        (resource) => resource.status === 'Pendiente' || resource.status === 'En revisión',
-      ).length,
+      pending: resources.filter((resource) => resource.status === 'Pendiente').length,
       approvedToday: resources.filter((resource) => resource.status === 'Aprobado').length + 6,
       rejected: resources.filter((resource) => resource.status === 'Rechazado').length + 2,
       reports: resources.filter((resource) => resource.status === 'Reportado').length,
     };
   });
 
-  openReview(resourceId: number): void {
-    this.updateStatus(resourceId, 'En revisión');
+  openResourceDetails(resourceId: number): void {
     this.selectedResource.set(
       this.resourcesState().find((resource) => resource.id === resourceId) ?? null,
     );
   }
 
-  closeReview(): void {
+  closeResourceDetails(): void {
     this.selectedResource.set(null);
-  }
-
-  approveResource(resourceId: number): void {
-    this.updateStatus(resourceId, 'Aprobado');
-    this.closeReview();
-  }
-
-  rejectResource(resourceId: number): void {
-    this.updateStatus(resourceId, 'Rechazado');
-    this.closeReview();
-  }
-
-  private updateStatus(resourceId: number, status: ModerationStatus): void {
-    this.resourcesState.update((resources) =>
-      resources.map((resource) =>
-        resource.id === resourceId ? { ...resource, status } : resource,
-      ),
-    );
   }
 }

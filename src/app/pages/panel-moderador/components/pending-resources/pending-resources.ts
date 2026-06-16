@@ -13,7 +13,6 @@ export class PendingResourcesComponent {
   getStatusTextClasses(status: ModerationStatus): string {
     const classes: Record<ModerationStatus, string> = {
       Pendiente: 'table-text-icon status-pending',
-      'En revisión': 'table-text-icon status-reviewing',
       Aprobado: 'table-text-icon status-approved',
       Rechazado: 'table-text-icon status-rejected',
       Reportado: 'table-text-icon status-reported',
