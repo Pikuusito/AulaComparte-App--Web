@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../../../shared/services/auth.service';
 
 @Component({
   selector: 'app-login-form',
@@ -12,6 +13,7 @@ import { FormsModule } from '@angular/forms';
 // Lógica Básica para inicio de sesión, sin validación real ni conexión a backend. (Temporal)
 export class LoginForm {
   private readonly router = inject(Router);
+  private readonly auth   = inject(AuthService);
   private readonly moderatorEmail = 'moderador@aulacomparte.edu.pe';
 
   readonly email = signal('');
@@ -33,7 +35,9 @@ export class LoginForm {
     // Simular un breve delay de carga
     setTimeout(() => {
       this.isSubmitting.set(false);
-      this.router.navigate([this.isModeratorLogin() ? '/panel-moderador' : '/panel-estudiante']);
+      const isMod = this.isModeratorLogin();
+      this.auth.setRole(isMod ? 'moderador' : 'usuario');
+      this.router.navigate([isMod ? '/panel-moderador' : '/panel-usuario']);
     }, 600);
   }
 

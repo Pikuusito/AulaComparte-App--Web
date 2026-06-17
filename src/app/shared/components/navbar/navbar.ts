@@ -1,6 +1,7 @@
-import { Component, inject } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
-import { PanelUiService } from '../../../pages/panel-estudiante/services/panel-ui.service';
+import { Component, inject, computed } from '@angular/core';
+import { RouterLink, Router } from '@angular/router';
+import { PanelUiService } from '../../../pages/panel-usuario/services/panel-ui.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -10,19 +11,13 @@ import { PanelUiService } from '../../../pages/panel-estudiante/services/panel-u
   styleUrl: './navbar.css',
 })
 export class Navbar {
-  private router = inject(Router);
-  private panelUi = inject(PanelUiService);
+  private readonly panelUi = inject(PanelUiService);
+  private readonly router = inject(Router);
+  readonly auth = inject(AuthService);
+  readonly profileRoute = computed(() => this.auth.isModerador() ? '/panel-moderador' : '/panel-usuario');
 
-  get isStudentPanel(): boolean {
-    return this.router.url.includes('/panel-estudiante');
-  }
-
-  get isModeratorPanel(): boolean {
-    return this.router.url.includes('/panel-moderador');
-  }
-
-  get isPanelPage(): boolean {
-    return this.isStudentPanel || this.isModeratorPanel;
+  get isHome(): boolean {
+    return this.router.url === '/' || this.router.url === '';
   }
 
   openPublishResource(): void {

@@ -216,6 +216,7 @@
 }
 
 .criteria-list label {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -230,7 +231,8 @@
   transition:
     border-color 180ms ease,
     background 180ms ease,
-    box-shadow 180ms ease;
+    box-shadow 180ms ease,
+    transform 180ms ease;
 }
 
 .criteria-list label:hover {
@@ -239,10 +241,69 @@
   box-shadow: 0 12px 24px rgb(15 118 110 / 0.08);
 }
 
-.criteria-list input {
-  width: 1.1rem;
-  height: 1.1rem;
-  accent-color: #0f766e;
+.criteria-list label:has(.criteria-checkbox:checked) {
+  border-color: rgb(45 212 191);
+  background: linear-gradient(135deg, #f0fdfa 0%, #ecfeff 100%);
+  box-shadow: 0 14px 28px rgb(15 118 110 / 0.12);
+}
+
+.criteria-checkbox {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.criteria-checkmark {
+  display: grid;
+  width: 1.45rem;
+  height: 1.45rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 2px solid rgb(203 213 225);
+  border-radius: 0.55rem;
+  background: #ffffff;
+  color: #ffffff;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.72);
+  transition:
+    border-color 180ms ease,
+    background 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
+}
+
+.criteria-check-icon {
+  width: 0.92rem;
+  height: 0.92rem;
+  opacity: 0;
+  transform: scale(0.45) rotate(-10deg);
+  transition:
+    opacity 140ms ease,
+    transform 180ms cubic-bezier(0.2, 1.65, 0.35, 1);
+}
+
+.criteria-checkbox:focus-visible + .criteria-checkmark {
+  outline: 4px solid rgb(20 184 166 / 0.16);
+  outline-offset: 3px;
+}
+
+.criteria-checkbox:checked + .criteria-checkmark {
+  border-color: #0f766e;
+  background: #0f766e;
+  box-shadow:
+    0 0 0 4px rgb(20 184 166 / 0.12),
+    0 10px 18px rgb(15 118 110 / 0.18);
+  animation: criteria-check-pop 260ms ease-out;
+}
+
+.criteria-checkbox:checked + .criteria-checkmark .criteria-check-icon {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+  animation: criteria-check-spark 300ms ease-out;
 }
 
 .author-comment-field {
@@ -349,5 +410,25 @@
   from {
     opacity: 0;
     transform: translateY(14px) scale(0.98);
+  }
+}
+
+@keyframes criteria-check-pop {
+  0% {
+    transform: scale(0.82);
+  }
+
+  58% {
+    transform: scale(1.12);
+  }
+}
+
+@keyframes criteria-check-spark {
+  0% {
+    filter: drop-shadow(0 0 0 rgb(255 255 255 / 0));
+  }
+
+  45% {
+    filter: drop-shadow(0 0 8px rgb(255 255 255 / 0.75));
   }
 }

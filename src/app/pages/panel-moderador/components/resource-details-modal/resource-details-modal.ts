@@ -1,9 +1,7 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { Component, PLATFORM_ID, effect, inject } from '@angular/core';
-import {
-  ModerationDataService,
-  ModerationResourceType,
-} from '../../services/moderation-data.service';
+import { ModerationResourceType } from '../../models/moderation.model';
+import { ModerationDataService } from '../../services/moderation-data.service';
 
 @Component({
   selector: 'app-resource-details-modal',

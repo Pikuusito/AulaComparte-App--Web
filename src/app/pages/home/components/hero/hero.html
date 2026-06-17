@@ -22,8 +22,8 @@
 
       <!-- Título Principal -->
       <h1 class="text-5xl md:text-6xl lg:text-7xl font-extrabold text-gray-900 tracking-tight leading-tight mb-6 drop-shadow-sm">
-        Comparte <br class="hidden md:block"/>
-        <span class="text-transparent bg-clip-text bg-gradient-to-r from-main-700 to-main-500">recursos educativos</span>
+        Comparte <br/>
+        <span class="whitespace-nowrap text-transparent bg-clip-text bg-gradient-to-r from-main-700 to-main-500">recursos educativos</span>
       </h1>
       
       <!-- Subtítulo -->
@@ -32,19 +32,31 @@
       </p>
 
       <!-- Botones de Acción -->
-      <div class="flex flex-col sm:flex-row items-center justify-start gap-4 mb-2">
-        <button class="w-full sm:w-auto px-8 py-4 bg-main-600 text-white border border-transparent rounded-full font-bold text-lg shadow-xl shadow-main-600/30 hover:shadow-main-600/50 hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-2 group">
-          Explorar Recursos
-          <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+      <div class="flex flex-col sm:flex-row items-start justify-start gap-3 mb-2">
+
+        <!-- Botón primario: Explorar Recursos -->
+        <button class="w-full sm:w-auto px-7 py-3.5 bg-main-600 text-white rounded-full font-semibold text-base shadow-lg shadow-main-600/25 hover:bg-main-700 hover:shadow-main-600/40 hover:-translate-y-0.5 active:translate-y-0 active:shadow-md transition-all duration-200 flex items-center justify-center gap-2.5 group">
+          <!-- Ícono brújula: más semántico para "explorar" -->
+          <svg class="w-[1.1rem] h-[1.1rem] transition-transform duration-300 group-hover:rotate-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" fill="currentColor" stroke="none"/>
+          </svg>
+          Explorar recursos
+          <!-- Flecha sutil que desliza al hacer hover -->
+          <svg class="w-4 h-4 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/>
           </svg>
         </button>
-        <button class="w-full sm:w-auto px-8 py-4 bg-white/80 backdrop-blur-sm text-gray-800 border border-gray-200 rounded-full font-bold text-lg hover:bg-white hover:border-gray-300 hover:text-main-700 hover:-translate-y-1 shadow-sm transition-all duration-300 flex items-center justify-center gap-2 group">
-          <svg class="w-5 h-5 text-main-600 group-hover:scale-110 group-hover:rotate-90 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+
+        <!-- Botón secundario: Publicar material -->
+        <button class="w-full sm:w-auto px-7 py-3.5 bg-white text-gray-700 border border-gray-200 rounded-full font-semibold text-base hover:border-main-300 hover:text-main-700 hover:bg-main-50 hover:-translate-y-0.5 active:translate-y-0 shadow-sm transition-all duration-200 flex items-center justify-center gap-2.5 group">
+          <!-- Ícono upload: más semántico para "publicar" -->
+          <svg class="w-[1.1rem] h-[1.1rem] text-main-500 transition-transform duration-200 group-hover:-translate-y-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5"/>
           </svg>
           Publicar material
         </button>
+
       </div>
 
     </div>

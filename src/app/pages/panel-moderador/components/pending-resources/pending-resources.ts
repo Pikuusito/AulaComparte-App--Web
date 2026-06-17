@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
-import { ModerationDataService, ModerationStatus } from '../../services/moderation-data.service';
+import { ModerationStatus } from '../../models/moderation.model';
+import { ModerationDataService } from '../../services/moderation-data.service';
 
 @Component({
   selector: 'app-pending-resources',

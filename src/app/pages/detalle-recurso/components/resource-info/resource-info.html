@@ -1,0 +1,27 @@
+<div class="space-y-6">
+  <div>
+    <h2 class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Descripcion</h2>
+    <p class="text-slate-700 leading-relaxed">{{ detail.resource().description }}</p>
+  </div>
+
+  <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
+    <div class="rounded-2xl bg-slate-50 border border-slate-100 px-4 py-3">
+      <p class="text-xs text-slate-400 font-medium">Curso</p>
+      <p class="mt-0.5 text-sm font-bold text-slate-800">{{ detail.resource().subject }}</p>
+    </div>
+    <div class="rounded-2xl bg-slate-50 border border-slate-100 px-4 py-3">
+      <p class="text-xs text-slate-400 font-medium">Nivel</p>
+      <p class="mt-0.5 text-sm font-bold text-slate-800">{{ detail.resource().level }}</p>
+    </div>
+    <div class="rounded-2xl bg-slate-50 border border-slate-100 px-4 py-3">
+      <p class="text-xs text-slate-400 font-medium">Formato</p>
+      <p class="mt-0.5 text-sm font-bold text-slate-800">{{ detail.resource().format }}</p>
+    </div>
+    <div class="rounded-2xl bg-slate-50 border border-slate-100 px-4 py-3">
+      <p class="text-xs text-slate-400 font-medium">Contenido</p>
+      <p class="mt-0.5 text-sm font-bold text-slate-800">{{ detail.resourceMetricLabel() }}</p>
+    </div>
+  </div>
+
+  <hr class="border-slate-100 mt-8 mb-4" />
+</div>

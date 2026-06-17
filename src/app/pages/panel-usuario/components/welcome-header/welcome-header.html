@@ -1,0 +1,39 @@
+<!-- Banner de bienvenida -->
+<section class="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-main-900 via-main-800 to-main-600 p-8 shadow-2xl sm:p-12 transition-all duration-500 hover:shadow-main-500/20">
+  <!-- Decoraciones de fondo (Glassmorphism & Blurs) -->
+  <div class="pointer-events-none absolute inset-0">
+    <!-- Círculo brillante superior derecho -->
+    <div class="absolute -right-20 -top-20 h-96 w-96 rounded-full bg-main-400/30 blur-[100px] transition-transform duration-1000 ease-in-out hover:scale-110"></div>
+    <!-- Círculo brillante inferior izquierdo -->
+    <div class="absolute -bottom-32 -left-32 h-[30rem] w-[30rem] rounded-full bg-teal-500/20 blur-[120px]"></div>
+    <!-- Destello central -->
+    <div class="absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full bg-emerald-500/15 blur-[80px]"></div>
+    
+    <!-- Patrón de puntos sutil (opcional) -->
+    <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=')] opacity-50"></div>
+  </div>
+
+  <!-- Imagen de Bienvenida Grande y en la Esquina -->
+  <div class="pointer-events-none absolute -bottom-16 -right-80 z-0 hidden md:block">
+    <div class="relative">
+      <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-0 h-64 w-64 rounded-full bg-gradient-to-tr from-emerald-400/50 to-main-500/50 blur-3xl"></div>
+      <!-- Ajustamos el tamaño, blend-mode y aplicamos mask-image para desvanecer la parte izquierda -->
+      <img src="img/welcome_header_imagen.png" alt="Ilustración de bienvenida" class="relative z-10 h-[26rem] w-auto object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.3)] mix-blend-luminosity opacity-80 [mask-image:linear-gradient(to_right,transparent_0%,black_30%)]" />
+    </div>
+  </div>
+
+  <div class="relative z-10 flex flex-col gap-8">
+    <div class="flex max-w-2xl flex-col items-start">
+      <!-- Título principal -->
+      <!-- Con el backend integrado, debera mostrar el nombre de usuario del perfil correspondiente -->
+      <h1 class="text-3xl font-extrabold tracking-tight text-white sm:text-4xl lg:text-5xl drop-shadow-md truncate">
+        Bienvenido, (Usuario)
+      </h1>
+
+      <!-- Descripción -->
+      <p class="mt-5 text-lg leading-relaxed text-main-50 sm:text-xl font-light max-w-xl">
+        Tu espacio para buscar, guardar y publicar recursos educativos. Tanto estudiantes como docentes comparten este panel.
+      </p>
+    </div>
+  </div>
+</section>

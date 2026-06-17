@@ -2,7 +2,7 @@
   display: block;
 }
 
-.role-toggle:has(#rol-maestro:checked) .role-toggle__indicator {
+.role-toggle:has(#rol-docente:checked) .role-toggle__indicator {
   transform: translateX(100%);
 }
 
