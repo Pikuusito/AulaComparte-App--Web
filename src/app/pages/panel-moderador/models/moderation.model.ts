@@ -13,6 +13,7 @@ export type ModerationResourceFormat =
   | 'Enlace'
   | 'Material físico';
 
+// Modelo de datos para representar los recursos en el panel de moderación, incluyendo campos específicos para la revisión de contenido y riesgos asociados.
 export type ModerationStatus = 'Pendiente' | 'Aprobado' | 'Rechazado' | 'Reportado';
 export type ModerationRisk = 'Bajo' | 'Medio' | 'Alto';
 

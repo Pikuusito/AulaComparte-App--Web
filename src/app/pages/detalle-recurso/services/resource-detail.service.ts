@@ -1,6 +1,5 @@
-import { Injectable, signal, computed, inject } from '@angular/core';
+import { Injectable, signal, computed, effect, inject } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { MOCK_RESOURCES } from '../../../shared/data/mock-resources';
 import { ResourceDetail, ResourceType } from '../../../shared/models/resource.model';
 import { ResourceLibraryService } from '../../../shared/services/resource-library.service';
 
@@ -9,18 +8,32 @@ import { ResourceLibraryService } from '../../../shared/services/resource-librar
 export class ResourceDetailService {
   private readonly sanitizer = inject(DomSanitizer);
   private readonly resourceLibrary = inject(ResourceLibraryService);
+  private readonly currentResourceId = signal(1);
 
-  // Cargamos el primer recurso de la base de datos simulada(@data/MOCK_RESOURCES) por defecto
-  readonly resource = signal<ResourceDetail>(MOCK_RESOURCES[0] as ResourceDetail);
+  // Cargamos el primer recurso de la biblioteca simulada por defecto.
+  readonly resource = signal<ResourceDetail>(this.resourceLibrary.findResource(1) as ResourceDetail);
 
   readonly isDownloading = signal(false);
   readonly downloaded    = signal(false);
   readonly showPreview   = signal(false);
   readonly previewLoaded = signal(false);
 
+  constructor() {
+    effect(() => {
+      const resource = this.resourceLibrary
+        .resources()
+        .find((item) => item.id === this.currentResourceId());
+
+      if (resource) {
+        this.resource.set(resource as ResourceDetail);
+      }
+    });
+  }
+
   loadResource(id: number): void {
     const found = this.resourceLibrary.findResource(id);
     if (found) {
+      this.currentResourceId.set(id);
       this.resource.set(found as ResourceDetail);
       // Reset state
       this.downloaded.set(false);
@@ -46,8 +59,16 @@ export class ResourceDetailService {
     const normalizedFormat = resource.format.toLowerCase();
 
     if (normalizedFormat.includes('imagen') || normalizedFormat.includes('image')) {
-      const imageCount = resource.imageCount ?? 1;
+      const imageCount = resource.imageCount;
+      if (imageCount === undefined) {
+        return 'Detectando imagenes...';
+      }
+
       return `${imageCount} ${imageCount === 1 ? 'imagen' : 'imagenes'}`;
+    }
+
+    if (resource.pages === undefined) {
+      return 'Detectando paginas...';
     }
 
     return `${resource.pages} ${resource.pages === 1 ? 'pagina' : 'paginas'}`;

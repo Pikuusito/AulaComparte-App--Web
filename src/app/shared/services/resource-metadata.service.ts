@@ -37,6 +37,37 @@ export class ResourceMetadataService {
     };
   }
 
+  async detectFromUrl(
+    fileUrl: string | undefined,
+    format: DetectableResourceFormat | string | undefined,
+  ): Promise<ResourceFileMetadata> {
+    if (!fileUrl) {
+      return {};
+    }
+
+    if (format === 'Imagen') {
+      return this.isImageUrl(fileUrl) ? { imageCount: 1 } : {};
+    }
+
+    if (format !== 'PDF' && !this.isPdfUrl(fileUrl)) {
+      return {};
+    }
+
+    try {
+      const response = await fetch(fileUrl);
+
+      if (!response.ok) {
+        return {};
+      }
+
+      return {
+        pages: this.countPdfPages(await response.arrayBuffer()),
+      };
+    } catch {
+      return {};
+    }
+  }
+
   private countPdfPages(buffer: ArrayBuffer): number {
     const content = new TextDecoder('latin1').decode(buffer);
     const pageMatches = content.match(/\/Type\s*\/Page\b/g);
@@ -58,5 +89,13 @@ export class ResourceMetadataService {
 
   private isImageFile(file: File): boolean {
     return file.type.startsWith('image/') || /\.(apng|avif|gif|jpe?g|png|webp)$/i.test(file.name);
+  }
+
+  private isPdfUrl(fileUrl: string): boolean {
+    return fileUrl.toLowerCase().split('?')[0].endsWith('.pdf');
+  }
+
+  private isImageUrl(fileUrl: string): boolean {
+    return /\.(apng|avif|gif|jpe?g|png|webp)$/i.test(fileUrl.toLowerCase().split('?')[0]);
   }
 }

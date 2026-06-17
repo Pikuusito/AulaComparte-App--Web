@@ -26,7 +26,7 @@ export interface ResourceItem {
 export interface ResourceDetail extends ResourceItem {
   description: string;
   level: string;
-  pages: number;
+  pages?: number;
   format: string;
   isSaved: boolean;
   fileUrl: string;
