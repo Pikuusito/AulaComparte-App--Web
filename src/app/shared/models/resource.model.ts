@@ -11,7 +11,7 @@ export interface ResourceItem {
   title: string;
   type: ResourceType;
   subject: string;
-  downloads: number;
+  downloads?: number;
   author: string;
   publishedAgo: string;
   description?: string;

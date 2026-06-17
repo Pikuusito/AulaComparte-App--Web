@@ -33,7 +33,9 @@ export class ResourceLibraryService {
   incrementDownloads(resourceId: number): void {
     this.resourcesState.update((resources) =>
       resources.map((resource) =>
-        resource.id === resourceId ? { ...resource, downloads: resource.downloads + 1 } : resource,
+        resource.id === resourceId
+          ? { ...resource, downloads: (resource.downloads ?? 0) + 1 }
+          : resource,
       ),
     );
   }

@@ -50,7 +50,7 @@
     title="Descargas"
     aria-label="Descargas"
   >
-    <span>{{ detail.resource().downloads }}</span>
+    <span>{{ detail.resource().downloads ?? 0 }}</span>
     <svg
       xmlns="http://www.w3.org/2000/svg"
       class="h-4 w-4 text-main-600"
