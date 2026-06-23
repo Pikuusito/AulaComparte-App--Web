@@ -2,6 +2,22 @@
   display: block;
 }
 
+.registration-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.registration-card::before {
+  position: absolute;
+  inset: -35% -25% auto auto;
+  width: 13rem;
+  height: 13rem;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgb(20 184 166 / 0.18), transparent 66%);
+  content: '';
+  pointer-events: none;
+}
+
 .role-toggle:has(#rol-docente:checked) .role-toggle__indicator {
   transform: translateX(100%);
 }
@@ -9,4 +25,225 @@
 .terms-checkbox:checked + span .terms-check {
   opacity: 1;
   transform: scale(1);
+}
+
+.registration-success {
+  position: relative;
+  display: grid;
+  min-height: 29rem;
+  align-content: center;
+  justify-items: center;
+  padding: 2.25rem 0.5rem;
+  text-align: center;
+  animation: success-card-in 420ms cubic-bezier(0.2, 1.5, 0.38, 1) both;
+}
+
+.success-orbit {
+  position: relative;
+  display: grid;
+  width: 8.5rem;
+  height: 8.5rem;
+  place-items: center;
+  margin-bottom: 1.45rem;
+}
+
+.success-orbit-ring {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgb(20 184 166 / 0.22);
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 50% 50%, rgb(240 253 250 / 0.9), transparent 58%),
+    conic-gradient(from 140deg, transparent, rgb(20 184 166 / 0.56), transparent 64%);
+  animation: success-ring-spin 1.8s linear infinite;
+}
+
+.success-orbit-ring::after {
+  position: absolute;
+  inset: 0.72rem;
+  border: 1px solid rgb(45 212 191 / 0.22);
+  border-radius: inherit;
+  background: rgb(255 255 255 / 0.72);
+  content: '';
+  backdrop-filter: blur(8px);
+}
+
+.success-check {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: 5rem;
+  height: 5rem;
+  place-items: center;
+  border-radius: 1.65rem;
+  background: linear-gradient(135deg, #0f766e 0%, #14b8a6 48%, #22c55e 100%);
+  color: #ffffff;
+  box-shadow:
+    0 22px 44px rgb(20 184 166 / 0.34),
+    inset 0 1px 0 rgb(255 255 255 / 0.34);
+  animation: success-check-pop 520ms 90ms cubic-bezier(0.2, 1.7, 0.35, 1) both;
+}
+
+.success-check svg {
+  width: 2.35rem;
+  height: 2.35rem;
+  stroke-dasharray: 30;
+  stroke-dashoffset: 30;
+  animation: success-check-draw 460ms 360ms ease-out forwards;
+}
+
+.success-spark {
+  position: absolute;
+  z-index: 2;
+  width: 0.58rem;
+  height: 0.58rem;
+  border-radius: 999px;
+  background: #2dd4bf;
+  box-shadow: 0 0 0.95rem rgb(45 212 191 / 0.72);
+  opacity: 0;
+  animation: success-spark-pop 760ms 280ms ease-out both;
+}
+
+.success-spark-one {
+  top: 0.65rem;
+  right: 1.35rem;
+}
+
+.success-spark-two {
+  bottom: 1.25rem;
+  left: 0.95rem;
+  width: 0.45rem;
+  height: 0.45rem;
+  background: #86efac;
+}
+
+.success-spark-three {
+  right: 0.7rem;
+  bottom: 2.1rem;
+  width: 0.38rem;
+  height: 0.38rem;
+  background: #99f6e4;
+}
+
+.success-eyebrow {
+  color: #0f766e;
+  font-size: 0.78rem;
+  font-weight: 840;
+  letter-spacing: 0.22em;
+  line-height: 1rem;
+  text-transform: uppercase;
+}
+
+.registration-success h2 {
+  margin-top: 0.55rem;
+  color: rgb(15 23 42);
+  font-size: clamp(2rem, 5vw, 2.65rem);
+  font-weight: 900;
+  letter-spacing: -0.055em;
+  line-height: 0.98;
+}
+
+.success-copy {
+  max-width: 25rem;
+  margin-top: 1rem;
+  color: rgb(71 85 105);
+  font-size: 1rem;
+  font-weight: 520;
+  line-height: 1.7;
+}
+
+.success-progress {
+  width: min(18rem, 100%);
+  height: 0.42rem;
+  margin-top: 1.6rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgb(204 251 241);
+}
+
+.success-progress span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #0f766e, #14b8a6, #22c55e);
+  transform-origin: left;
+  animation: success-progress-fill 7.2s linear both;
+}
+
+@keyframes success-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.85rem) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes success-ring-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes success-check-pop {
+  0% {
+    transform: scale(0.48) rotate(-12deg);
+  }
+
+  68% {
+    transform: scale(1.1) rotate(2deg);
+  }
+
+  100% {
+    transform: scale(1) rotate(0);
+  }
+}
+
+@keyframes success-check-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes success-spark-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.2) translateY(0.6rem);
+  }
+
+  42% {
+    opacity: 1;
+    transform: scale(1.18) translateY(-0.15rem);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(0.8) translateY(-0.65rem);
+  }
+}
+
+@keyframes success-progress-fill {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .registration-success,
+  .success-orbit-ring,
+  .success-check,
+  .success-check svg,
+  .success-spark,
+  .success-progress span {
+    animation-duration: 1ms;
+    animation-iteration-count: 1;
+  }
 }

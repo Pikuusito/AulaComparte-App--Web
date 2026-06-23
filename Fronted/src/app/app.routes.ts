@@ -5,6 +5,7 @@ import { Registro } from './pages/registro/registro';
 import { PanelUsuario } from './pages/panel-usuario/panel-usuario';
 import { PanelModerador } from './pages/panel-moderador/panel-moderador';
 import { DetalleRecurso } from './pages/detalle-recurso/detalle-recurso';
+import { authGuard, moderatorGuard } from './shared/guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -22,10 +23,12 @@ export const routes: Routes = [
   {
     path: 'panel-usuario',
     component: PanelUsuario,
+    canActivate: [authGuard],
   },
   {
     path: 'panel-moderador',
     component: PanelModerador,
+    canActivate: [moderatorGuard],
   },
   {
     path: 'detalle-recurso/:id',

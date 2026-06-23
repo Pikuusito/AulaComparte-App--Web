@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
+import { AuthService } from '../../../../shared/services/auth.service';
 
 @Component({
   selector: 'app-welcome-header',
@@ -7,4 +8,7 @@ import { Component } from '@angular/core';
   styleUrl: './welcome-header.css',
 })
 export class WelcomeHeaderComponent {
+  private readonly auth = inject(AuthService);
+
+  protected readonly userName = computed(() => this.auth.currentUser()?.name.trim() || 'estudiante');
 }

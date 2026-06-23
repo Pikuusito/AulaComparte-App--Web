@@ -1,6 +1,8 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import {
   Component,
+  ElementRef,
   OnDestroy,
   PLATFORM_ID,
   Renderer2,
@@ -8,9 +10,18 @@ import {
   effect,
   inject,
   signal,
+  viewChild,
 } from '@angular/core';
-import { PanelUiService } from '../../services/panel-ui.service';
+import { finalize } from 'rxjs';
+import {
+  ApiEducationLevel,
+  ApiResourceFormat,
+  ApiResourceType,
+  ResourceCreateRequest,
+} from '../../../../shared/models/resource-api.model';
+import { ResourceApiService } from '../../../../shared/services/resource-api.service';
 import { ResourceMetadataService } from '../../../../shared/services/resource-metadata.service';
+import { PanelUiService } from '../../services/panel-ui.service';
 
 type ResourceType = 'Libro' | 'Apuntes' | 'Guía' | 'Ejercicios' | 'Diapositivas' | 'Examen';
 type EducationLevel = 'Primaria' | 'Secundaria' | 'Preuniversitario' | 'Universitario';
@@ -37,8 +48,9 @@ export class PublishResourceModalComponent implements OnDestroy {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly renderer = inject(Renderer2);
   private readonly resourceMetadata = inject(ResourceMetadataService);
+  private readonly resourceApi = inject(ResourceApiService);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
-  private submitTimeoutId: ReturnType<typeof setTimeout> | undefined;
+  private readonly resourceFileInput = viewChild<ElementRef<HTMLInputElement>>('resourceFileInput');
 
   // Opciones que aparecen en los selects del formulario.
   readonly resourceTypes: ResourceType[] = [
@@ -74,6 +86,7 @@ export class PublishResourceModalComponent implements OnDestroy {
   readonly format = signal<ResourceFormat>('PDF');
   readonly resourceLink = signal('');
   readonly fileName = signal('');
+  readonly selectedFile = signal<File | null>(null);
   readonly detectedPages = signal<number | null>(null);
   readonly detectedImageCount = signal<number | null>(null);
   readonly metadataFeedback = signal('');
@@ -82,6 +95,7 @@ export class PublishResourceModalComponent implements OnDestroy {
   readonly isSubmitting = signal(false);
   readonly wasPublished = signal(false);
   readonly feedback = signal('');
+  readonly hasSubmitError = signal(false);
   readonly showErrors = signal(false);
 
   // Estados calculados para saber qué campos mostrar y qué pasos están completos.
@@ -162,6 +176,16 @@ export class PublishResourceModalComponent implements OnDestroy {
     }
 
     return 'Adjunta un archivo educativo en el formato seleccionado para que pueda revisarse.';
+  });
+
+  readonly acceptedFileTypes = computed(() => {
+    if (this.format() === 'PDF') {
+      return 'application/pdf,.pdf';
+    }
+    if (this.format() === 'Imagen') {
+      return 'image/jpeg,image/png,image/webp,image/gif,.jpg,.jpeg,.png,.webp,.gif';
+    }
+    return '.doc,.docx,.odt,.ods,.odp,.ppt,.pptx,.xls,.xlsx';
   });
 
   readonly missingRequirements = computed(() => {
@@ -255,6 +279,7 @@ export class PublishResourceModalComponent implements OnDestroy {
     this.panelUi.closePublishResource();
     this.isSubmitting.set(false);
     this.feedback.set('');
+    this.hasSubmitError.set(false);
     this.showErrors.set(false);
   }
 
@@ -262,7 +287,6 @@ export class PublishResourceModalComponent implements OnDestroy {
     // Cancelar sí borra todo el progreso antes de cerrar.
     event?.preventDefault();
     event?.stopPropagation();
-    this.clearSubmitTimeout();
     this.panelUi.closePublishResource();
     this.resetForm();
   }
@@ -283,6 +307,7 @@ export class PublishResourceModalComponent implements OnDestroy {
     if (step === 1 || step < this.currentStep() || this.canReachStep(step)) {
       this.currentStep.set(step);
       this.feedback.set('');
+      this.hasSubmitError.set(false);
       this.showErrors.set(false);
     }
   }
@@ -308,6 +333,7 @@ export class PublishResourceModalComponent implements OnDestroy {
     }
 
     this.feedback.set('');
+    this.hasSubmitError.set(false);
     this.showErrors.set(false);
   }
 
@@ -318,6 +344,7 @@ export class PublishResourceModalComponent implements OnDestroy {
     if (step > 1) {
       this.currentStep.set((step - 1) as WizardStepValue);
       this.feedback.set('');
+      this.hasSubmitError.set(false);
       this.showErrors.set(false);
     }
   }
@@ -366,8 +393,11 @@ export class PublishResourceModalComponent implements OnDestroy {
     const select = target as HTMLSelectElement | null;
     this.format.set((select?.value as ResourceFormat | undefined) ?? 'PDF');
     this.feedback.set('');
+    this.hasSubmitError.set(false);
     this.resourceLink.set('');
     this.fileName.set('');
+    this.selectedFile.set(null);
+    this.clearNativeFileInput();
     this.resetDetectedMetadata();
     this.materialReference.set('');
   }
@@ -379,10 +409,13 @@ export class PublishResourceModalComponent implements OnDestroy {
 
     if (!files || files.length === 0) {
       this.fileName.set('');
+      this.selectedFile.set(null);
       return;
     }
 
-    this.fileName.set(this.getFileSelectionLabel(files));
+    const file = files.item(0);
+    this.selectedFile.set(file);
+    this.fileName.set(file?.name ?? '');
 
     const selectedFormat = this.format();
 
@@ -399,9 +432,9 @@ export class PublishResourceModalComponent implements OnDestroy {
   }
 
   submit(event: Event): void {
-    // Simulación temporal de publicación hasta conectar con backend.
     event.preventDefault();
     this.feedback.set('');
+    this.hasSubmitError.set(false);
     this.showErrors.set(true);
 
     if (!this.canSubmit()) {
@@ -410,17 +443,23 @@ export class PublishResourceModalComponent implements OnDestroy {
     }
 
     this.isSubmitting.set(true);
-    this.clearSubmitTimeout();
-    this.submitTimeoutId = setTimeout(() => {
-      this.isSubmitting.set(false);
-      this.wasPublished.set(true);
-      this.feedback.set('Recurso preparado para revisión.');
-    }, 520);
+    this.resourceApi
+      .create(this.buildCreateRequest(), this.selectedFile())
+      .pipe(finalize(() => this.isSubmitting.set(false)))
+      .subscribe({
+        next: () => {
+          this.wasPublished.set(true);
+          this.feedback.set('Recurso enviado correctamente y pendiente de revisión.');
+        },
+        error: (error: HttpErrorResponse) => {
+          this.hasSubmitError.set(true);
+          this.feedback.set(this.getSubmitErrorMessage(error));
+        },
+      });
   }
 
   resetForm(): void {
     // Devuelve el modal a su estado inicial.
-    this.clearSubmitTimeout();
     this.currentStep.set(1);
     this.title.set('');
     this.description.set('');
@@ -431,12 +470,15 @@ export class PublishResourceModalComponent implements OnDestroy {
     this.format.set('PDF');
     this.resourceLink.set('');
     this.fileName.set('');
+    this.selectedFile.set(null);
+    this.clearNativeFileInput();
     this.resetDetectedMetadata();
     this.materialReference.set('');
     this.hasPermission.set(false);
     this.isSubmitting.set(false);
     this.wasPublished.set(false);
     this.feedback.set('');
+    this.hasSubmitError.set(false);
     this.showErrors.set(false);
   }
 
@@ -540,33 +582,87 @@ export class PublishResourceModalComponent implements OnDestroy {
     return /^https?:\/\/.+\..+/.test(value.trim());
   }
 
-  private clearSubmitTimeout(): void {
-    // Evita que un envío simulado pendiente cambie el estado después de cancelar.
-    if (this.submitTimeoutId) {
-      clearTimeout(this.submitTimeoutId);
-      this.submitTimeoutId = undefined;
-    }
-  }
-
   private resetDetectedMetadata(): void {
     this.detectedPages.set(null);
     this.detectedImageCount.set(null);
     this.metadataFeedback.set('');
   }
 
-  private getFileSelectionLabel(files: FileList): string {
-    if (files.length === 1) {
-      return files.item(0)?.name ?? '';
+  private clearNativeFileInput(): void {
+    // El navegador no permite limpiar un input file con data binding; esta es la única
+    // manipulación imperativa y se mantiene encapsulada mediante la query de Angular.
+    const input = this.resourceFileInput()?.nativeElement;
+    if (input) {
+      input.value = '';
     }
-
-    return this.format() === 'Imagen'
-      ? `${files.length} imagenes seleccionadas`
-      : `${files.length} archivos seleccionados`;
   }
 
   private getTextValue(target: EventTarget | null): string {
     // Helper para leer valores de input/textarea sin usar any.
     const input = target as HTMLInputElement | HTMLTextAreaElement | null;
     return input?.value ?? '';
+  }
+
+  private buildCreateRequest(): ResourceCreateRequest {
+    const resourceTypes: Record<ResourceType, ApiResourceType> = {
+      Libro: 'book',
+      Apuntes: 'notes',
+      Guía: 'guide',
+      Ejercicios: 'exercises',
+      Diapositivas: 'slides',
+      Examen: 'exam',
+    };
+    const levels: Record<EducationLevel, ApiEducationLevel> = {
+      Primaria: 'primary',
+      Secundaria: 'secondary',
+      Preuniversitario: 'preuniversity',
+      Universitario: 'university',
+    };
+    const formats: Record<ResourceFormat, ApiResourceFormat> = {
+      PDF: 'pdf',
+      Imagen: 'image',
+      Documento: 'document',
+      Enlace: 'link',
+      'Material físico': 'physical',
+    };
+
+    const request: ResourceCreateRequest = {
+      title: this.title().trim(),
+      description: this.description().trim(),
+      resource_type: resourceTypes[this.resourceType()],
+      subject: this.subject().trim(),
+      education_level: levels[this.level()],
+      format: formats[this.format()],
+      author: this.author().trim(),
+      permission_declared: this.hasPermission(),
+    };
+    if (this.requiresLink()) {
+      request.external_url = this.resourceLink().trim();
+    }
+    if (this.isPhysicalMaterial()) {
+      request.material_reference = this.materialReference().trim();
+    }
+    const pages = this.detectedPages();
+    const images = this.detectedImageCount();
+    if (pages !== null) {
+      request.page_count = pages;
+    }
+    if (images !== null) {
+      request.image_count = images;
+    }
+    return request;
+  }
+
+  private getSubmitErrorMessage(error: HttpErrorResponse): string {
+    if (error.status === 0) {
+      return 'No se pudo conectar con el servidor. Verifica que FastAPI esté encendido.';
+    }
+    if (error.status === 401) {
+      return 'Tu sesión venció. Inicia sesión nuevamente para publicar.';
+    }
+    if (typeof error.error?.detail === 'string') {
+      return error.error.detail;
+    }
+    return 'No se pudo publicar el recurso. Revisa los datos e inténtalo nuevamente.';
   }
 }

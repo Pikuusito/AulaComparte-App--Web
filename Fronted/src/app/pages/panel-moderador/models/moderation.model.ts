@@ -16,6 +16,13 @@ export type ModerationResourceFormat =
 // Modelo de datos para representar los recursos en el panel de moderación, incluyendo campos específicos para la revisión de contenido y riesgos asociados.
 export type ModerationStatus = 'Pendiente' | 'Aprobado' | 'Rechazado' | 'Reportado';
 export type ModerationRisk = 'Bajo' | 'Medio' | 'Alto';
+export type ModerationFeedbackKind = 'approved' | 'rejected';
+
+export interface ModerationFeedback {
+  kind: ModerationFeedbackKind;
+  title: string;
+  message: string;
+}
 
 export interface ModerationResource {
   id: number;
@@ -31,7 +38,9 @@ export interface ModerationResource {
   status: ModerationStatus;
   risk: ModerationRisk;
   permissionDeclared: boolean;
+  reportReason?: string;
   sourceNote: string;
+  sourceUrl?: string;
 }
 
 export interface ModerationStats {
@@ -39,4 +48,10 @@ export interface ModerationStats {
   approvedToday: number;
   rejected: number;
   reports: number;
+}
+
+export interface ModerationDailyWorkStats {
+  date: string;
+  approvedToday: number;
+  rejectedToday: number;
 }

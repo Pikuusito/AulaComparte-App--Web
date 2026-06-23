@@ -21,7 +21,19 @@
     </div>
   </div>
 
-  @if (moderationData.reviewableResources().length > 0) {
+  @if (moderationData.loadError()) {
+    <div class="moderation-feedback moderation-feedback-error">
+      <p>{{ moderationData.loadError() }}</p>
+      <button type="button" (click)="moderationData.loadPendingResources()">Reintentar</button>
+    </div>
+  }
+
+  @if (moderationData.isLoading()) {
+    <div class="moderation-feedback moderation-feedback-loading">
+      <span aria-hidden="true"></span>
+      <p>Cargando recursos pendientes...</p>
+    </div>
+  } @else if (moderationData.reviewableResources().length > 0) {
     <div class="w-full max-w-full overflow-x-auto">
       <table class="resources-table w-full min-w-[50rem]">
         <thead>

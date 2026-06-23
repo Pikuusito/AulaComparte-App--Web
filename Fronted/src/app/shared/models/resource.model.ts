@@ -4,6 +4,7 @@ export type ResourceType =
   | 'Libro'
   | 'Ejercicios'
   | 'Diapositivas'
+  | 'Examen'
   | 'Investigación';
 
 export interface ResourceItem {

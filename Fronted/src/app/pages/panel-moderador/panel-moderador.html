@@ -1,4 +1,44 @@
 <section class="min-h-screen bg-[#f7fffc] px-4 pb-12 pt-28 sm:px-6 lg:px-8">
+  @if (moderationData.feedback(); as feedback) {
+    <aside
+      class="moderation-toast"
+      [class.moderation-toast-approved]="feedback.kind === 'approved'"
+      [class.moderation-toast-rejected]="feedback.kind === 'rejected'"
+      role="status"
+      aria-live="polite"
+    >
+      <span class="moderation-toast-icon" aria-hidden="true">
+        @if (feedback.kind === 'approved') {
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 6 9 17l-5-5" />
+          </svg>
+        } @else {
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 6 6 18" />
+            <path d="m6 6 12 12" />
+          </svg>
+        }
+      </span>
+
+      <span class="moderation-toast-copy">
+        <strong>{{ feedback.title }}</strong>
+        <span>{{ feedback.message }}</span>
+      </span>
+
+      <button
+        type="button"
+        class="moderation-toast-close"
+        aria-label="Cerrar confirmación"
+        (click)="moderationData.dismissFeedback()"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M18 6 6 18" />
+          <path d="m6 6 12 12" />
+        </svg>
+      </button>
+    </aside>
+  }
+
   <div class="mx-auto max-w-6xl space-y-8">
     <app-moderator-welcome></app-moderator-welcome>
     <app-moderation-stats></app-moderation-stats>

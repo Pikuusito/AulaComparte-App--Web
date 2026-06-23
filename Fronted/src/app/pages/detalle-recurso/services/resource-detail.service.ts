@@ -1,21 +1,33 @@
-import { Injectable, signal, computed, effect, inject } from '@angular/core';
+import { Injectable, computed, effect, inject, signal } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ResourceDetail, ResourceType } from '../../../shared/models/resource.model';
 import { ResourceLibraryService } from '../../../shared/services/resource-library.service';
 
-// Servicio para manejar la lógica de detalle de recurso, incluyendo carga, estado de descarga y vista previa. Se integra con (ResourceLibraryService) para sincronizar cambios como guardados o descargas.
+const API_ORIGIN = 'http://localhost:8000';
+
 @Injectable({ providedIn: 'root' })
 export class ResourceDetailService {
   private readonly sanitizer = inject(DomSanitizer);
   private readonly resourceLibrary = inject(ResourceLibraryService);
   private readonly currentResourceId = signal(1);
 
-  // Cargamos el primer recurso de la biblioteca simulada por defecto.
-  readonly resource = signal<ResourceDetail>(this.resourceLibrary.findResource(1) as ResourceDetail);
+  readonly resource = signal<ResourceDetail>({
+    id: 0,
+    title: 'Cargando recurso...',
+    type: 'Guía',
+    subject: '',
+    author: '',
+    publishedAgo: '',
+    description: 'Estamos obteniendo la información desde el catálogo.',
+    level: '',
+    format: 'Enlace',
+    isSaved: false,
+    fileUrl: '',
+  });
 
   readonly isDownloading = signal(false);
-  readonly downloaded    = signal(false);
-  readonly showPreview   = signal(false);
+  readonly downloaded = signal(false);
+  readonly showPreview = signal(false);
   readonly previewLoaded = signal(false);
 
   constructor() {
@@ -31,11 +43,10 @@ export class ResourceDetailService {
   }
 
   loadResource(id: number): void {
+    this.currentResourceId.set(id);
     const found = this.resourceLibrary.findResource(id);
     if (found) {
-      this.currentResourceId.set(id);
       this.resource.set(found as ResourceDetail);
-      // Reset state
       this.downloaded.set(false);
       this.showPreview.set(false);
       this.previewLoaded.set(false);
@@ -44,12 +55,13 @@ export class ResourceDetailService {
 
   readonly typeBadgeClasses = computed(() => {
     const classMap: Record<ResourceType, string> = {
-      'Guía':         'bg-blue-100 text-blue-700 border-blue-200',
-      'Apuntes':      'bg-amber-100 text-amber-700 border-amber-200',
-      'Libro':        'bg-rose-100 text-rose-700 border-rose-200',
-      'Ejercicios':   'bg-emerald-100 text-emerald-700 border-emerald-200',
-      'Diapositivas': 'bg-purple-100 text-purple-700 border-purple-200',
-      'Investigación':'bg-indigo-100 text-indigo-700 border-indigo-200',
+      Guía: 'bg-blue-100 text-blue-700 border-blue-200',
+      Apuntes: 'bg-amber-100 text-amber-700 border-amber-200',
+      Libro: 'bg-rose-100 text-rose-700 border-rose-200',
+      Ejercicios: 'bg-emerald-100 text-emerald-700 border-emerald-200',
+      Diapositivas: 'bg-purple-100 text-purple-700 border-purple-200',
+      Examen: 'bg-red-100 text-red-700 border-red-200',
+      Investigación: 'bg-indigo-100 text-indigo-700 border-indigo-200',
     };
     return classMap[this.resource().type];
   });
@@ -61,32 +73,39 @@ export class ResourceDetailService {
     if (normalizedFormat.includes('imagen') || normalizedFormat.includes('image')) {
       const imageCount = resource.imageCount;
       if (imageCount === undefined) {
-        return 'Detectando imagenes...';
+        return 'Detectando imágenes...';
       }
 
-      return `${imageCount} ${imageCount === 1 ? 'imagen' : 'imagenes'}`;
+      return `${imageCount} ${imageCount === 1 ? 'imagen' : 'imágenes'}`;
     }
 
     if (resource.pages === undefined) {
-      return 'Detectando paginas...';
+      return 'Detectando páginas...';
     }
 
-    return `${resource.pages} ${resource.pages === 1 ? 'pagina' : 'paginas'}`;
+    return `${resource.pages} ${resource.pages === 1 ? 'página' : 'páginas'}`;
   });
 
   readonly previewUrl = computed<SafeResourceUrl>(() => {
     const url = this.resource().fileUrl;
-    
-    // Si la URL es pública (http), usamos Google Docs Viewer (ideal para móviles o docs)
-    if (url.startsWith('http')) {
+
+    if (this.shouldUseGoogleViewer()) {
       const encoded = encodeURIComponent(url);
       return this.sanitizer.bypassSecurityTrustResourceUrl(
-        `https://docs.google.com/viewer?url=${encoded}&embedded=true`
+        `https://docs.google.com/viewer?url=${encoded}&embedded=true`,
       );
     }
-    
-    // Si es un archivo local, el navegador lo renderiza nativamente
+
     return this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  });
+
+  readonly previewProviderLabel = computed(() =>
+    this.shouldUseGoogleViewer() ? 'Powered by Google Docs Viewer' : 'Vista previa local',
+  );
+
+  readonly downloadUrl = computed(() => {
+    const resourceId = this.resource().id;
+    return resourceId > 0 ? `${API_ORIGIN}/api/resources/${resourceId}/download` : '';
   });
 
   toggleSave(): void {
@@ -95,8 +114,12 @@ export class ResourceDetailService {
     this.syncResourceFromLibrary(resourceId);
   }
 
-  simulateDownload(): void {
-    if (this.isDownloading()) return;
+  downloadResource(event: MouseEvent): void {
+    if (this.isDownloading() || !this.downloadUrl()) {
+      event.preventDefault();
+      return;
+    }
+
     this.isDownloading.set(true);
     setTimeout(() => {
       this.isDownloading.set(false);
@@ -108,12 +131,24 @@ export class ResourceDetailService {
   }
 
   togglePreview(): void {
-    this.showPreview.update(v => !v);
+    this.showPreview.update((value) => !value);
     if (!this.showPreview()) this.previewLoaded.set(false);
   }
 
   onPreviewLoad(): void {
     this.previewLoaded.set(true);
+  }
+
+  private shouldUseGoogleViewer(): boolean {
+    const url = this.resource().fileUrl;
+    const format = this.resource().format.toLowerCase();
+
+    return Boolean(
+      url.startsWith('http')
+      && !url.startsWith(`${API_ORIGIN}/`)
+      && !format.includes('pdf')
+      && !format.includes('imagen'),
+    );
   }
 
   private syncResourceFromLibrary(resourceId: number): void {

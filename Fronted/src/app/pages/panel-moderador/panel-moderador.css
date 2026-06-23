@@ -1,3 +1,158 @@
 :host {
   display: block;
 }
+
+.moderation-toast {
+  position: fixed;
+  top: 5.75rem;
+  right: 1rem;
+  z-index: 90;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.85rem;
+  width: min(28rem, calc(100vw - 2rem));
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 0.72);
+  border-radius: 1.35rem;
+  background: rgb(255 255 255 / 0.94);
+  padding: 0.95rem 1rem;
+  color: rgb(15 23 42);
+  box-shadow:
+    0 26px 60px rgb(15 23 42 / 0.16),
+    inset 0 1px 0 rgb(255 255 255 / 0.8);
+  backdrop-filter: blur(18px);
+  animation: moderation-toast-in 380ms cubic-bezier(0.2, 1.55, 0.36, 1) both;
+}
+
+.moderation-toast::before {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0.35rem;
+  content: '';
+}
+
+.moderation-toast-approved::before {
+  background: linear-gradient(180deg, #14b8a6, #22c55e);
+}
+
+.moderation-toast-rejected::before {
+  background: linear-gradient(180deg, #fb7185, #ef4444);
+}
+
+.moderation-toast-icon {
+  display: grid;
+  width: 2.75rem;
+  height: 2.75rem;
+  place-items: center;
+  border-radius: 1rem;
+  animation: moderation-toast-icon-pop 480ms 90ms cubic-bezier(0.25, 1.7, 0.35, 1) both;
+}
+
+.moderation-toast-icon svg {
+  width: 1.35rem;
+  height: 1.35rem;
+}
+
+.moderation-toast-approved .moderation-toast-icon {
+  background: linear-gradient(135deg, #ccfbf1, #dcfce7);
+  color: #047857;
+  box-shadow: 0 14px 28px rgb(16 185 129 / 0.2);
+}
+
+.moderation-toast-rejected .moderation-toast-icon {
+  background: linear-gradient(135deg, #ffe4e6, #fee2e2);
+  color: #be123c;
+  box-shadow: 0 14px 28px rgb(244 63 94 / 0.16);
+}
+
+.moderation-toast-copy {
+  display: grid;
+  min-width: 0;
+  gap: 0.12rem;
+}
+
+.moderation-toast-copy strong {
+  overflow: hidden;
+  color: rgb(15 23 42);
+  font-size: 0.96rem;
+  font-weight: 780;
+  line-height: 1.25rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.moderation-toast-copy span {
+  overflow: hidden;
+  color: rgb(71 85 105);
+  font-size: 0.86rem;
+  font-weight: 500;
+  line-height: 1.25rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.moderation-toast-close {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  border-radius: 999px;
+  color: rgb(100 116 139);
+  transition:
+    background 180ms ease,
+    color 180ms ease,
+    transform 180ms ease;
+}
+
+.moderation-toast-close:hover,
+.moderation-toast-close:focus-visible {
+  background: rgb(241 245 249);
+  color: rgb(15 23 42);
+  transform: scale(1.04);
+}
+
+.moderation-toast-close:focus-visible {
+  outline: 4px solid rgb(20 184 166 / 0.16);
+  outline-offset: 2px;
+}
+
+.moderation-toast-close svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+@keyframes moderation-toast-in {
+  from {
+    opacity: 0;
+    transform: translate3d(1.5rem, -0.85rem, 0) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes moderation-toast-icon-pop {
+  0% {
+    transform: scale(0.58) rotate(-10deg);
+  }
+
+  64% {
+    transform: scale(1.12) rotate(2deg);
+  }
+
+  100% {
+    transform: scale(1) rotate(0);
+  }
+}
+
+@media (max-width: 640px) {
+  .moderation-toast {
+    top: 5rem;
+    right: 0.75rem;
+    left: 0.75rem;
+    width: auto;
+  }
+}

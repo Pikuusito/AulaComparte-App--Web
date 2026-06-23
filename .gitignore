@@ -42,15 +42,30 @@ __screenshots__/
 # Python backend
 /backend/.venv/
 /backend/**/__pycache__/
+/backend/.pytest_cache/
+/backend/storage/*
+!/backend/storage/.gitkeep
+/backend/uvicorn*.log
 *.py[cod]
 .env
+
+# Local tool/cache folders
+.antigravitycli/
 
 # System files
 .DS_Store
 Thumbs.db
 
-# Custom agent instructions
+# Custom agent instructions / private working notes
 agents.md
 contexto_aulacomparte.md
+
+# Project documentation markdown files
+BASE_DE_DATOS.md
+DOCUMENTACION_BACKEND.md
 DOCUMENTACION_PROYECTO.md
 plan_backend.md
+backend/README.md
+sql/README.md
+Fronted/README.md
+INSTRUCCIONES_OTRA_COMPUTADORA.md

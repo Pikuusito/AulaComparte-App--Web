@@ -8,7 +8,7 @@
           </svg>
           Vista previa - {{ detail.resource().format }} &middot; {{ detail.resourceMetricLabel() }}
         </div>
-        <span class="text-[10px] font-medium text-slate-400">Powered by Google Docs Viewer</span>
+        <span class="text-[10px] font-medium text-slate-400">{{ detail.previewProviderLabel() }}</span>
       </div>
 
       @if (!detail.previewLoaded()) {

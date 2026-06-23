@@ -9,7 +9,7 @@
     (keydown.escape)="close()"
   >
     <article
-      class="details-card relative w-full max-w-4xl overflow-hidden rounded-[1.75rem] border border-white/70 bg-white shadow-[0_32px_90px_rgba(15,23,42,0.28)]"
+      class="details-card relative w-full max-w-6xl overflow-hidden rounded-[1.75rem] border border-white/70 bg-white shadow-[0_32px_90px_rgba(15,23,42,0.28)]"
       (click)="$event.stopPropagation()"
     >
       <div class="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-main-100 blur-3xl"></div>
@@ -103,7 +103,10 @@
         </div>
       </header>
 
-      <div class="details-body relative grid gap-5 px-6 py-5 lg:grid-cols-[1fr_0.92fr]">
+      <div
+        class="details-body relative grid gap-5 px-6 py-5 lg:grid-cols-[1fr_0.92fr]"
+        [class.reported-layout]="resource.status === 'Reportado'"
+      >
         <section>
           <dl class="details-list">
             <div>
@@ -140,7 +143,12 @@
             </div>
           </dl>
 
-          <button type="button" class="full-file-button">
+          <button
+            type="button"
+            class="full-file-button"
+            [disabled]="!resource.sourceUrl"
+            (click)="openResource(resource)"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="h-5 w-5"
@@ -155,15 +163,21 @@
               <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z" />
               <circle cx="12" cy="12" r="3" />
             </svg>
-            Ver archivo completo
+            {{ resource.sourceUrl ? 'Ver archivo completo' : 'Sin archivo para abrir' }}
           </button>
+
         </section>
 
         <section class="criteria-section" aria-labelledby="criteria-title">
           <h3 id="criteria-title">Criterios</h3>
           <div class="criteria-list">
             <label>
-              <input class="criteria-checkbox" type="checkbox" />
+              <input
+                class="criteria-checkbox"
+                type="checkbox"
+                [checked]="reviewCriteria().educational"
+                (change)="updateReviewCriterion('educational', $event)"
+              />
               <span class="criteria-checkmark" aria-hidden="true">
                 <svg class="criteria-check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M20 6 9 17l-5-5" />
@@ -172,7 +186,12 @@
               <span>Es educativo</span>
             </label>
             <label>
-              <input class="criteria-checkbox" type="checkbox" />
+              <input
+                class="criteria-checkbox"
+                type="checkbox"
+                [checked]="reviewCriteria().permission"
+                (change)="updateReviewCriterion('permission', $event)"
+              />
               <span class="criteria-checkmark" aria-hidden="true">
                 <svg class="criteria-check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M20 6 9 17l-5-5" />
@@ -181,7 +200,12 @@
               <span>Permiso claro</span>
             </label>
             <label>
-              <input class="criteria-checkbox" type="checkbox" />
+              <input
+                class="criteria-checkbox"
+                type="checkbox"
+                [checked]="reviewCriteria().sensitiveData"
+                (change)="updateReviewCriterion('sensitiveData', $event)"
+              />
               <span class="criteria-checkmark" aria-hidden="true">
                 <svg class="criteria-check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M20 6 9 17l-5-5" />
@@ -190,7 +214,12 @@
               <span>Sin datos sensibles</span>
             </label>
             <label>
-              <input class="criteria-checkbox" type="checkbox" />
+              <input
+                class="criteria-checkbox"
+                type="checkbox"
+                [checked]="reviewCriteria().verifiedSource"
+                (change)="updateReviewCriterion('verifiedSource', $event)"
+              />
               <span class="criteria-checkmark" aria-hidden="true">
                 <svg class="criteria-check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M20 6 9 17l-5-5" />
@@ -200,13 +229,30 @@
             </label>
           </div>
 
+          @if (!allCriteriaChecked()) {
+            <p class="mt-3 rounded-2xl bg-yellow-50 px-3 py-2 text-xs font-bold text-yellow-800">
+              Marca todos los criterios para habilitar la aprobación del material.
+            </p>
+          }
+
           <label class="author-comment-field">
             <span>Comentario para el autor</span>
-            <textarea placeholder="Escribe una observación breve" rows="4"></textarea>
+            <textarea
+              placeholder="Escribe una observación breve"
+              rows="4"
+              maxlength="1000"
+              [value]="moderationData.moderatorComment()"
+              (input)="updateModeratorComment($event)"
+            ></textarea>
           </label>
 
           <div class="review-actions">
-            <button type="button" class="accept-button">
+            <button
+              type="button"
+              class="accept-button"
+              [disabled]="!canApprove()"
+              (click)="approve(resource.id)"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-5 w-5"
@@ -220,10 +266,15 @@
               >
                 <path d="M20 6 9 17l-5-5" />
               </svg>
-              Aceptar
+              {{ moderationData.isModerating() ? 'Guardando...' : 'Aceptar' }}
             </button>
 
-            <button type="button" class="reject-button">
+            <button
+              type="button"
+              class="reject-button"
+              [disabled]="moderationData.isModerating()"
+              (click)="reject(resource.id)"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-5 w-5"
@@ -238,10 +289,30 @@
                 <path d="M18 6 6 18" />
                 <path d="m6 6 12 12" />
               </svg>
-              Rechazar
+              {{ moderationData.isModerating() ? 'Guardando...' : 'Rechazar' }}
             </button>
           </div>
         </section>
+
+        @if (resource.status === 'Reportado') {
+          <aside class="report-reason-panel" aria-label="Motivo del reporte del estudiante">
+            <div class="report-reason-heading">
+              <div class="report-reason-icon" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.35" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M5 4v16" />
+                  <path d="M5 5h10l-1 4 1 4H5" />
+                </svg>
+              </div>
+              <div>
+                <p class="report-reason-kicker">Reporte del estudiante</p>
+                <h3>Motivo para revisar este material</h3>
+              </div>
+            </div>
+            <p class="report-reason-text">
+              {{ resource.reportReason || 'El estudiante no dejó un motivo detallado.' }}
+            </p>
+          </aside>
+        }
       </div>
     </article>
   </section>

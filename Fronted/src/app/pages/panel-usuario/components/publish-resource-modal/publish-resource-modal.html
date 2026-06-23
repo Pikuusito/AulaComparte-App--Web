@@ -143,7 +143,7 @@
 
               <div class="relative">
                 <p class="text-xs font-black uppercase tracking-[0.2em] text-main-700">
-                  Resumen publicado
+                  Resumen enviado
                 </p>
                 <article
                   class="preview-resource-card mt-4 overflow-hidden rounded-[1.5rem] border border-main-100 bg-white/85 p-4 shadow-2xl shadow-main-900/10 backdrop-blur-md"
@@ -200,7 +200,7 @@
                 Recurso listo para revisión
               </h3>
               <p class="mx-auto mt-2 max-w-md text-sm leading-5 text-slate-500">
-                Cuando exista backend, este formulario enviará el material a moderación.
+                El material ya fue almacenado y enviado a la cola de moderación.
               </p>
               <div
                 class="mx-auto mt-5 grid max-w-md gap-3 rounded-3xl border border-slate-100 bg-slate-50 p-4 text-left"
@@ -489,9 +489,10 @@
                         <label>
                           <span class="text-sm font-bold text-slate-700">Archivo del recurso</span>
                           <input
+                            #resourceFileInput
                             type="file"
-                            [attr.accept]="format() === 'PDF' ? 'application/pdf,.pdf' : format() === 'Imagen' ? 'image/*' : null"
-                            [attr.multiple]="format() === 'Imagen' ? '' : null"
+                            [attr.accept]="acceptedFileTypes()"
+                            [disabled]="isSubmitting()"
                             class="mt-1.5 w-full rounded-2xl border border-dashed bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-600 transition file:mr-4 file:rounded-full file:border-0 file:bg-main-100 file:px-4 file:py-1.5 file:text-sm file:font-bold file:text-main-700 hover:bg-white focus:outline-none focus:ring-4 focus:ring-main-100"
                             [class.border-red-300]="!!attachmentError()"
                             [class.border-slate-300]="!attachmentError()"
@@ -629,7 +630,13 @@
 
                 @if (feedback()) {
                   <p
-                    class="mt-3 rounded-2xl border border-main-100 bg-main-50 px-4 py-2.5 text-sm font-semibold text-main-800"
+                    class="mt-3 rounded-2xl border px-4 py-2.5 text-sm font-semibold"
+                    [class.border-red-200]="hasSubmitError()"
+                    [class.bg-red-50]="hasSubmitError()"
+                    [class.text-red-700]="hasSubmitError()"
+                    [class.border-main-100]="!hasSubmitError()"
+                    [class.bg-main-50]="!hasSubmitError()"
+                    [class.text-main-800]="!hasSubmitError()"
                   >
                     {{ feedback() }}
                   </p>

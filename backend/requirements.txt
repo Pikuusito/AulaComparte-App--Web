@@ -1,0 +1,11 @@
+fastapi[standard]==0.138.0
+pydantic-settings==2.14.2
+SQLAlchemy==2.0.51
+alembic==1.18.4
+pyodbc==5.3.0
+PyJWT==2.13.0
+pwdlib[argon2]==0.3.0
+python-multipart==0.0.32
+email-validator==2.3.0
+pytest==9.1.1
+httpx==0.28.1
