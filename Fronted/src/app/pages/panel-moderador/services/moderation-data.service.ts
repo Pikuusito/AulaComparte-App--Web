@@ -392,7 +392,7 @@ export class ModerationDataService {
       return resource.material_reference;
     }
 
-    return resource.file_path ? 'Archivo guardado en el volumen de Docker' : 'Sin fuente declarada';
+    return resource.file_path ? 'Archivo guardado en el almacenamiento local' : 'Sin fuente declarada';
   }
 
   private resolveSourceUrl(resource: ApiResource): string {
@@ -432,7 +432,7 @@ export class ModerationDataService {
     }
 
     if (error.status === 0) {
-      return 'No se pudo conectar con el backend. Revisa que Docker y la API estén encendidos.';
+      return 'No se pudo conectar con el backend. Revisa que FastAPI esté iniciado con Uvicorn.';
     }
 
     return 'No se pudo cargar o actualizar la cola de moderación. Intenta nuevamente.';

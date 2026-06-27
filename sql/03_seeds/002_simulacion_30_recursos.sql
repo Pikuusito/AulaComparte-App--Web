@@ -5,7 +5,7 @@
   - Ejecutar 001_simulacion_50_usuarios.sql.
 
   Los 30 recursos usan enlaces de ejemplo o referencias de material físico para
-  no crear rutas hacia archivos inexistentes en el volumen Docker.
+  no crear rutas hacia archivos inexistentes en el almacenamiento local.
 */
 
 USE AulaComparte;
